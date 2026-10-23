@@ -1,0 +1,83 @@
+ekf_filter_node:
+  ros__parameters:
+    frequency: 30.0
+    two_d_mode: true
+    publish_tf: true
+
+    map_frame: map
+    odom_frame: odom
+    # REVERTED back to base_link (DO NOT change to base_footprint!)
+    # URDF structure: base_link is ROOT, base_footprint is a CHILD of base_link.
+    # EKF must publish odom→base_link so the full tree becomes:
+    #   map → odom → base_link (EKF) → base_footprint / chassis / laser_frame (RSP)
+    # If set to base_footprint, EKF publishes odom→base_footprint but base_link
+    # has no parent → TF tree splits into two disconnected trees → Nav2 crashes.
+    # AMCL base_frame_id=base_footprint is CORRECT because base_footprint IS in
+    # the tree as a child of base_link via robot_state_publisher.
+    base_link_frame: base_link
+    world_frame: odom
+
+    # Wheel encoder odometry — velocity only (no pose drift accumulation)
+    # diff_drive_controller (diff_cont) publish ke ~/odom = /diff_cont/odom.
+    # /odom tidak punya publisher, jadi sebelumnya EKF tidak pernah dapat data roda.
+    odom0: /diff_cont/odom
+    odom0_config: [false, false, false,
+                   false, false, false,
+                   true,  false, false,
+                   false, false, true,
+                   false, false, false]
+    odom0_differential: false
+    odom0_relative: false
+    # Reduce process noise on wheel odom for stable velocity integration
+    odom0_queue_size: 5
+
+    # RF2O laser odometry — pose correction (x, y, yaw only)
+    # TUNED: Set differential=true to prevent RF2O absolute pose from
+    # fighting wheel odom when RF2O has accumulated drift.
+    # RF2O drift is treated as incremental correction, not ground truth.
+    odom1: /odom_rf2o
+    odom1_config: [true,  true,  false,
+                   false, false, true,
+                   false, false, false,
+                   false, false, false,
+                   false, false, false]
+    odom1_differential: true
+    odom1_relative: false
+    odom1_queue_size: 5
+
+    # IMU — kecepatan sudut yaw saja (gyro z)
+    # Simulasi: sensor imu Gazebo -> ros_gz_bridge -> /imu (frame imu_link,
+    # diputar 180° terhadap chassis; EKF mentransformasikannya lewat TF).
+    # Orientasi absolut tidak di-fuse: IMU Gazebo memberi yaw "sempurna" tanpa
+    # drift yang tidak realistis, dan robot fisik tidak punya magnetometer.
+    # Akselerasi tidak di-fuse: terlalu noisy untuk integrasi kecepatan.
+    # Robot fisik belum punya IMU -> topik kosong, EKF tetap jalan dengan odom0/odom1.
+    imu0: /imu
+    imu0_config: [false, false, false,
+                  false, false, false,
+                  false, false, false,
+                  false, false, true,
+                  false, false, false]
+    imu0_differential: false
+    imu0_relative: false
+    imu0_queue_size: 10
+    imu0_remove_gravitational_acceleration: true
+
+    # Process noise covariance (Q matrix)
+    # Lower diagonal values = more trust in sensor measurements
+    # Tuned for slow indoor service robot (~0.18 m/s max)
+    process_noise_covariance: [0.05,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.05,   0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.06,   0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.03,   0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.03,   0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.06,   0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.025,   0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.025,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.04,   0.0,    0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.01,   0.0,    0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.01,   0.0,    0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.02,   0.0,    0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.01,   0.0,    0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.01,   0.0,
+                               0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.0,     0.0,     0.0,    0.0,    0.0,    0.0,    0.0,    0.0,    0.015]
