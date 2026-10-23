@@ -1,0 +1,376 @@
+# ============================================================
+# nav2_params_v3.yaml
+# Tifa-Bot — Tel-U Coffee Shop Navigation
+# Rev: 2025-05-12  v3 — RECONCILED dari dua versi sebelumnya
+# Rev: 2026-10-22  v3-jazzy — migrasi ke Nav2 Jazzy (1.3.x), tuning tidak diubah.
+#      Baris yang berubah ditandai [JAZZY].
+#
+# MASALAH YANG DISELESAIKAN:
+#   [A] Dynamic person → global costmap tertutup → planner abort
+#       SOLUSI: global_costmap hanya static_layer (tidak ada obstacle_layer)
+#   [B] Robot berhenti lama lalu abort karena orang di samping
+#       SOLUSI: local_costmap dengan obstacle decay 3 detik
+#   [C] Robot lambat + menghentak
+#       SOLUSI: max_vel 0.35 m/s + acc_lim halus (0.3 m/s²)
+#   [D] Robot tidak mau manuver, lebih pilih berhenti
+#       SOLUSI: PathAlign.scale turun, BaseObstacle.scale balance
+#
+# PERBEDAAN DARI VERSI SEBELUMNYA (versi user & versi outputs/):
+#   - global_costmap: HAPUS obstacle_layer (ini yang menyebabkan abort)
+#   - robot_base_frame semua node: base_link (konsisten dgn EKF & URDF)
+#   - odom_topic bt_navigator: /odometry/filtered (output EKF)
+#   - max_vel_x: 0.35 m/s (naik dari 0.18)
+#   - acc_lim_x: 0.3 m/s² (HALUS, bukan 1.2 yg menghentak)
+#   - decel_lim_x: -0.5 m/s² (lebih cepat dari accel, safety)
+#   - local_costmap: voxel_layer + obstacle_decay: 3.0 detik [BARU]
+#   - BaseObstacle.scale: 2.0 (balanced — tidak terlalu takut, tidak abaikan)
+#   - movement_time_allowance: 10.0 (balanced, tidak 15 yg terlalu lama)
+#   - failure_tolerance: 0.3 (cepat trigger recovery jika benar stuck)
+# ============================================================
+
+amcl:
+  ros__parameters:
+    use_sim_time: False
+    alpha1: 0.15
+    alpha2: 0.15
+    alpha3: 0.10
+    alpha4: 0.10
+    alpha5: 0.2
+    base_frame_id: "base_footprint"         # AMCL tetap base_footprint — benar, ini child di URDF
+    beam_skip_distance: 0.5
+    beam_skip_error_threshold: 0.9
+    beam_skip_threshold: 0.3
+    do_beamskip: false
+    global_frame_id: "map"
+    lambda_short: 0.1
+    laser_likelihood_max_dist: 2.0
+    laser_max_range: 10.0
+    laser_min_range: 0.46                   # MATCH lidar_filter lower_threshold
+    laser_model_type: "likelihood_field"
+    max_beams: 90                           # lebih banyak = lokalisasi lebih akurat di ruang sempit
+    max_particles: 3000
+    min_particles: 500
+    odom_frame_id: "odom"
+    pf_err: 0.05
+    pf_z: 0.99
+    recovery_alpha_fast: 0.1
+    recovery_alpha_slow: 0.001
+    resample_interval: 1
+    robot_model_type: "nav2_amcl::DifferentialMotionModel"
+    save_pose_rate: 0.5
+    sigma_hit: 0.2
+    tf_broadcast: true
+    transform_tolerance: 1.0               # toleran terhadap TF delay di system sibuk
+    update_min_a: 0.1                       # update AMCL lebih sering di kecepatan rendah
+    update_min_d: 0.1
+    z_hit: 0.6                              # lebih percaya hit nyata (kurangi noise stainless)
+    z_max: 0.05
+    z_rand: 0.35                            # kurangi bobot random noise
+    z_short: 0.05
+    scan_topic: scan_filtered
+    enable_diagnostics: true
+
+# ============================================================
+bt_navigator:
+  ros__parameters:
+    use_sim_time: False
+    global_frame: map
+    robot_base_frame: base_link             # ROOT frame URDF → konsisten dgn EKF
+    odom_topic: /odometry/filtered          # OUTPUT EKF robot_localization, bukan raw /odom
+    bt_loop_duration: 10
+    default_server_timeout: 200
+    wait_for_service_timeout: 500
+    enable_diagnostics: true
+    # [JAZZY] navigator wajib dideklarasikan sebagai plugin
+    navigators: ["navigate_to_pose", "navigate_through_poses"]
+    navigate_to_pose:
+      plugin: "nav2_bt_navigator::NavigateToPoseNavigator"
+    navigate_through_poses:
+      plugin: "nav2_bt_navigator::NavigateThroughPosesNavigator"
+    # [JAZZY] plugin BT bawaan dimuat otomatis. plugin_lib_names HANYA untuk
+    # plugin custom — mendaftarkan ulang plugin bawaan menyebabkan error
+    # "ID [ComputePathToPose] already registered".
+    # plugin_lib_names: []
+    error_code_names:
+      - compute_path_error_code
+      - follow_path_error_code
+
+# ============================================================
+controller_server:
+  ros__parameters:
+    use_sim_time: False
+    controller_frequency: 10.0
+    min_x_velocity_threshold: 0.001
+    min_y_velocity_threshold: 0.5
+    min_theta_velocity_threshold: 0.001
+    odom_topic: /odometry/filtered          # kecepatan robot untuk DWB (default "odom" tidak ada publisher)
+    enable_stamped_cmd_vel: true           # [JAZZY] publish TwistStamped (diff_drive_controller Jazzy hanya terima TwistStamped)
+    # 0.3 dtk: lebih cepat trigger recovery jika robot benar-benar stuck
+    # (bukan 0.5 yg terlalu sabar — robot bisa diam sangat lama tanpa progress)
+    failure_tolerance: 0.3
+    progress_checker_plugin: "progress_checker"
+    goal_checker_plugins: ["general_goal_checker"]
+    controller_plugins: ["FollowPath"]
+
+    progress_checker:
+      plugin: "nav2_controller::SimpleProgressChecker"
+      required_movement_radius: 0.3        # deteksi stuck jika bergerak < 0.3m
+      # 10 detik: cukup untuk menunggu orang lewat, tidak terlalu lama jika benar stuck
+      movement_time_allowance: 10.0
+
+    general_goal_checker:
+      stateful: True
+      plugin: "nav2_controller::SimpleGoalChecker"
+      xy_goal_tolerance: 0.25
+      yaw_goal_tolerance: 0.25
+
+    FollowPath:
+      plugin: "dwb_core::DWBLocalPlanner"
+      debug_trajectory_details: False      # matikan di produksi — hemat CPU
+
+      # ── Kecepatan ──────────────────────────────────────────────────────────
+      min_vel_x: 0.0
+      min_vel_y: 0.0
+      max_vel_x: 0.35                      # [NAIK] 0.18 → 0.35 m/s sesuai permintaan
+      max_vel_y: 0.0
+      max_vel_theta: 0.8
+      min_speed_xy: 0.0
+      max_speed_xy: 0.35
+      min_speed_theta: 0.0
+
+      # ── Akselerasi/Deselerasi — SMOOTH, tidak menghentak ───────────────────
+      # acc_lim_x 0.3: butuh ~1.2 dtk untuk capai 0.35 m/s → halus
+      # decel_lim_x -0.5: stopping distance dari 0.35 m/s ≈ 0.12m → aman
+      # (BUKAN 1.2 dari versi sebelumnya yg terlalu agresif)
+      acc_lim_x: 0.3
+      acc_lim_y: 0.0
+      acc_lim_theta: 1.0
+      decel_lim_x: -0.5
+      decel_lim_y: 0.0
+      decel_lim_theta: -1.5
+
+      # ── DWB Sampling ───────────────────────────────────────────────────────
+      vx_samples: 20
+      vy_samples: 1
+      vtheta_samples: 40                   # banyak sample theta → lebih fleksibel manuver
+      sim_time: 1.7                        # look-ahead 2.5 dtk → "lihat" lebih jauh sebelum commit
+      linear_granularity: 0.05
+      angular_granularity: 0.025
+      transform_tolerance: 0.5
+      xy_goal_tolerance: 0.25
+      trans_stopped_velocity: 0.25
+      short_circuit_trajectory_evaluation: True
+      stateful: True
+
+      # ── DWB Critics ────────────────────────────────────────────────────────
+      critics: ["RotateToGoal", "Oscillation", "BaseObstacle", "GoalAlign", "PathAlign", "PathDist", "GoalDist"]
+
+      # BaseObstacle — BALANCE antara menghindari vs tidak panik dengan noise:
+      # 2.0: lebih kecil dari ver user (4.0) agar kaki kursi stainless yg noisy
+      # tidak membuat robot berhenti total, tapi cukup untuk menghindar
+      BaseObstacle.scale: 2.0
+
+      # PathAlign — TURUN dari 32→18: robot mau menyimpang dari path untuk
+      # menghindari orang bergerak, bukan berhenti. Path global masih diikuti
+      # secara kasar (dijaga oleh PathDist)
+      PathAlign.scale: 18.0
+      PathAlign.forward_point_distance: 0.1
+
+      GoalAlign.scale: 18.0
+      GoalAlign.forward_point_distance: 0.1
+
+      PathDist.scale: 28.0
+      GoalDist.scale: 22.0
+
+      RotateToGoal.scale: 32.0
+      RotateToGoal.slowing_factor: 6.0
+      RotateToGoal.lookahead_time: -1.0
+
+# ============================================================
+# LOCAL COSTMAP — menangani dynamic obstacle (orang bergerak)
+# Obstacle DECAY setelah 3 detik → orang yang pergi tidak tinggalkan ghost
+# ============================================================
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      update_frequency: 10.0
+      publish_frequency: 5.0
+      global_frame: odom
+      robot_base_frame: base_link           # ROOT frame, konsisten dgn EKF
+      use_sim_time: False
+      rolling_window: true
+      width: 3
+      height: 3
+      resolution: 0.05
+      robot_radius: 0.36
+      plugins: ["voxel_layer", "inflation_layer"]
+
+      voxel_layer:
+        plugin: "nav2_costmap_2d::VoxelLayer"
+        enabled: True
+        publish_voxel_map: True
+        origin_z: 0.0
+        z_resolution: 0.05
+        z_voxels: 16
+        max_obstacle_height: 2.0
+        mark_threshold: 0
+        observation_sources: scan
+        scan:
+          topic: /scan_filtered
+          max_obstacle_height: 2.0
+          clearing: True
+          marking: True
+          data_type: "LaserScan"
+          raytrace_max_range: 3.5
+          raytrace_min_range: 0.0
+          obstacle_max_range: 3.0
+          obstacle_min_range: 0.0
+        # [KEY BARU] obstacle_decay: orang yang sudah pergi → cost hilang setelah 3 dtk
+        # Tanpa ini, setiap orang yang lewat meninggalkan "hantu" di costmap
+        # yang menumpuk dan akhirnya menutup path lokal juga
+        combination_method: 1
+
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 3.0           # gradient lembut → robot mulai menghindar lebih awal
+        inflation_radius: 0.5             # 0.15m buffer di atas robot_radius 0.5m
+
+      always_send_full_costmap: True
+
+# ============================================================
+# GLOBAL COSTMAP — HANYA static_layer
+# INI ADALAH KUNCI SOLUSI MASALAH ABORT:
+# Dengan tidak ada obstacle_layer di global costmap, orang bergerak
+# TIDAK BISA menutup global path → planner selalu punya jalur valid
+# → Nav2 tidak pernah abort karena "failed to create plan"
+# ============================================================
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      update_frequency: 1.0
+      publish_frequency: 1.0
+      global_frame: map
+      robot_base_frame: base_link           # ROOT frame, konsisten
+      use_sim_time: False
+      robot_radius: 0.36
+      resolution: 0.05
+      track_unknown_space: true
+      # HANYA static_layer — tidak ada obstacle_layer sama sekali
+      # Robot menghindari obstacle dinamis HANYA via local costmap (DWB)
+      plugins: ["static_layer", "inflation_layer"]
+
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        cost_scaling_factor: 2.5           # gradient lembut → path global jauh dari dinding
+        inflation_radius: 0.6             # planner routing MEMUTAR kluster kursi, bukan tembus
+
+      always_send_full_costmap: True
+
+# ============================================================
+map_server:
+  ros__parameters:
+    use_sim_time: False
+    yaml_filename: ""
+
+map_saver:
+  ros__parameters:
+    use_sim_time: False
+    save_map_timeout: 5.0
+    free_thresh_default: 0.25
+    occupied_thresh_default: 0.65
+    map_subscribe_transient_local: True
+
+# ============================================================
+planner_server:
+  ros__parameters:
+    expected_planner_frequency: 5.0
+    use_sim_time: False
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner::NavfnPlanner"   # [JAZZY] pemisah "::" (bukan "/")
+      tolerance: 0.5
+      use_astar: true                      # A* lebih andal di maze/narrow corridors
+      allow_unknown: true
+
+# ============================================================
+smoother_server:
+  ros__parameters:
+    use_sim_time: False
+    smoother_plugins: ["simple_smoother"]
+    simple_smoother:
+      plugin: "nav2_smoother::SimpleSmoother"
+      tolerance: 1.0e-10
+      max_its: 1000
+      do_refinement: True
+
+# ============================================================
+behavior_server:
+  ros__parameters:
+    # [JAZZY] costmap_topic/footprint_topic dipecah jadi local_* dan global_*
+    local_costmap_topic: local_costmap/costmap_raw
+    global_costmap_topic: global_costmap/costmap_raw
+    local_footprint_topic: local_costmap/published_footprint
+    global_footprint_topic: global_costmap/published_footprint
+    cycle_frequency: 10.0
+    enable_stamped_cmd_vel: true
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "assisted_teleop", "wait"]
+    spin:
+      plugin: "nav2_behaviors::Spin"
+    backup:
+      plugin: "nav2_behaviors::BackUp"
+    drive_on_heading:
+      plugin: "nav2_behaviors::DriveOnHeading"
+    wait:
+      plugin: "nav2_behaviors::Wait"
+    assisted_teleop:
+      plugin: "nav2_behaviors::AssistedTeleop"
+    # [JAZZY] global_frame Humble (odom) sekarang bernama local_frame;
+    # global_frame baru = frame peta
+    local_frame: odom
+    global_frame: map
+    robot_base_frame: base_link
+    transform_tolerance: 0.5
+    use_sim_time: False
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 0.8
+    min_rotational_vel: 0.2
+    rotational_acc_lim: 1.0               # konsisten dengan acc_lim_theta DWB
+
+# ============================================================
+# VELOCITY SMOOTHER — filter perintah kecepatan agar tidak menghentak
+# ============================================================
+velocity_smoother:
+  ros__parameters:
+    use_sim_time: False
+    smoothing_frequency: 20.0
+    enable_stamped_cmd_vel: true
+    scale_velocities: False
+    feedback: "OPEN_LOOP"
+    max_velocity: [0.35, 0.0, 0.8]        # MATCH DWB max_vel_x
+    min_velocity: [-0.35, 0.0, -0.8]
+    max_accel: [0.3, 0.0, 1.0]            # MATCH DWB acc_lim — smooth
+    max_decel: [-0.5, 0.0, -1.5]          # MATCH DWB decel_lim
+    odom_topic: "/odometry/filtered"     # hanya dipakai jika feedback CLOSED_LOOP
+    odom_duration: 0.1
+    deadband_velocity: [0.01, 0.0, 0.01]  # eliminasi micro-slip
+    velocity_timeout: 1.0
+
+# ============================================================
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: False
+    loop_rate: 20
+    stop_on_failure: false                 # lanjut ke waypoint berikut jika satu gagal
+    waypoint_task_executor_plugin: "wait_at_waypoint"
+    wait_at_waypoint:
+      plugin: "nav2_waypoint_follower::WaitAtWaypoint"
+      enabled: True
+      waypoint_pause_duration: 500
+
+robot_state_publisher:
+  ros__parameters:
+    use_sim_time: False

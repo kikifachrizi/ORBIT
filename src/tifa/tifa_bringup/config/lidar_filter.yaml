@@ -1,0 +1,10 @@
+scan_to_scan_filter_chain:
+  ros__parameters:
+    filter1:
+      name: robot_body_filter
+      type: laser_filters/LaserScanPolygonFilter
+      params:
+        polygon_frame: base_link
+        # 12 sisi, radius 0.38 (apothem 0.367 → margin ~1.7cm di atas body 0.35)
+        polygon: "[[0.38,0.0],[0.329,0.19],[0.19,0.329],[0.0,0.38],[-0.19,0.329],[-0.329,0.19],[-0.38,0.0],[-0.329,-0.19],[-0.19,-0.329],[0.0,-0.38],[0.19,-0.329],[0.329,-0.19]]"
+        invert: false
