@@ -56,7 +56,6 @@ def generate_launch_description():
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
         parameters=[lidar_filter_config, {'use_sim_time': False}],
-        remappings=[('scan', 'scan'), ('scan_filtered', 'scan_filtered')]
     )
 
     rf2o_node = Node(

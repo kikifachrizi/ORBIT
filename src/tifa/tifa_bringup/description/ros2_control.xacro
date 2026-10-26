@@ -44,6 +44,10 @@
       <gazebo>
         <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
           <parameters>$(find tifa_bringup)/config/robot_controllers.yaml</parameters>
+          <ros>
+            <namespace>$(arg namespace)</namespace>
+            <remapping>/tf:=tf</remapping>
+          </ros>
         </plugin>
       </gazebo>
     </xacro:if>

@@ -5,6 +5,10 @@
          sim_mode = false -> hardware asli (diffdrive_arduino). Default aman = robot fisik. -->
     <xacro:arg name="sim_mode" default="false"/>
 
+    <!-- namespace robot (mis. tifa1). Hanya dipakai di sim: prefix topic sensor Gazebo
+         dan namespace controller_manager di dalam Gazebo. Kosong = tanpa namespace. -->
+    <xacro:arg name="namespace" default=""/>
+
     <xacro:include filename="robot_core.xacro"/>
 
     <!-- Hardware - satu blok ros2_control, plugin dipilih oleh sim_mode -->
