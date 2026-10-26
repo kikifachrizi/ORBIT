@@ -26,13 +26,6 @@ def generate_launch_description():
     package_name = 'tifa_bringup'
     lidar_pkg    = 'rplidar_ros'
 
-    robot_id       = LaunchConfiguration('robot_id')
-    ui_id          = LaunchConfiguration('ui_id')
-    ws_uri_primary = LaunchConfiguration('ws_uri_primary')
-
-    declare_robot_id = DeclareLaunchArgument('robot_id', default_value='TFRB1')
-    declare_ui_id    = DeclareLaunchArgument('ui_id',    default_value='TFUI1')
-    declare_ws_uri   = DeclareLaunchArgument('ws_uri_primary', default_value='wss://tifa-ws.forgixrobotic.com')
     declare_map_arg  = DeclareLaunchArgument(
         name='map',
         default_value=get_selected_map(),
@@ -58,18 +51,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory(lidar_pkg), 'launch', 'rplidar_c1_launch.py')
         ),
-    )
-    ws_bridge = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('tifa_ws_bridge'), 'launch', 'ws_bridge.launch.py')
-        ),
-        launch_arguments={'ws_uri_primary': ws_uri_primary, 'robot_id': robot_id, 'network_mode': 'auto'}.items()
-    )
-    diagnostic_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('tifa_diagnostic_node'), 'launch', 'diagnostic.launch.py')
-        ),
-        launch_arguments={'mode': 'navigation', 'robot_id': 'TFRB1', 'grace_period_sec': '10', 'global_timeout_sec': '120'}.items()
     )
 
     # =========================================================================
@@ -166,23 +147,12 @@ def generate_launch_description():
         name='initial_pose_pub', output='log',
         parameters=[{'use_sim_time': False}], arguments=['0.0', '0.0', '0.0']
     )
-    robot_api = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('tifa_robot_api'), 'launch', 'robot_api.launch.py')
-        ),
-        launch_arguments={'robot_id': robot_id, 'ui_id': ui_id}.items()
-    )
-    sensor_manager = Node(
-        package='tifa_robot_api', executable='sensor_manager_node', name='sensor_manager_node'
-    )
 
     layer4_timed = RegisterEventHandler(
         event_handler=OnProcessStart(
             target_action=controller_manager,
             on_start=[
                 TimerAction(period=20.0, actions=[initial_pose_node]),
-                TimerAction(period=22.0, actions=[robot_api]),
-                TimerAction(period=25.0, actions=[sensor_manager]),
             ]
         )
     )
@@ -191,10 +161,10 @@ def generate_launch_description():
     # RETURN
     # =========================================================================
     return LaunchDescription([
-        declare_map_arg, declare_robot_id, declare_ui_id, declare_ws_uri,
+        declare_map_arg,
 
         # Layer 0
-        rsp, rplidar_activate, ws_bridge, diagnostic_node,
+        rsp, rplidar_activate,
 
         # Layer 1
         laser_filter_node, rf2o_node, delayed_controller_manager,

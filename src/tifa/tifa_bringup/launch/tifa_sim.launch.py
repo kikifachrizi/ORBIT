@@ -43,8 +43,8 @@ def generate_launch_description():
         'use_sim_time', default_value='true',
         description='Pakai clock Gazebo (/clock)')
     declare_world = DeclareLaunchArgument(
-        'world', default_value=os.path.join(pkg_share, 'worlds', 'telu_coffee.sdf'),
-        description='Path file world SDF')
+        'world', default_value='empty.sdf',
+        description='Path file world SDF. World site ada di orbit_sim, bukan di tifa_bringup')
     declare_gz_args = DeclareLaunchArgument(
         'gz_args', default_value='-r -v 1',
         description="Argumen gz sim, mis. '-r -s --headless-rendering -v 1' untuk tanpa GUI")
@@ -60,9 +60,6 @@ def generate_launch_description():
     # Gazebo mencari mesh package://tifa_bringup/... di <share>/tifa_bringup/...
     gz_resource_path = AppendEnvironmentVariable(
         'GZ_SIM_RESOURCE_PATH', os.path.join(pkg_share, '..'))
-    # ... dan model://telu_coffee di <share>/tifa_bringup/worlds/telu_coffee
-    gz_world_models_path = AppendEnvironmentVariable(
-        'GZ_SIM_RESOURCE_PATH', os.path.join(pkg_share, 'worlds'))
 
     # =========================================================================
     # Gazebo + robot
@@ -140,7 +137,7 @@ def generate_launch_description():
 
     return LaunchDescription([
         declare_sim_time, declare_world, declare_gz_args, declare_x, declare_y, declare_yaw,
-        gz_resource_path, gz_world_models_path,
+        gz_resource_path,
 
         gz_sim, rsp, bridge, spawn_robot,
         spawn_controllers, spawn_diff_drive,

@@ -7,10 +7,8 @@ from launch.actions import (
     IncludeLaunchDescription,
     TimerAction,
     RegisterEventHandler,
-    DeclareLaunchArgument,
 )
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
 from launch.event_handlers import OnProcessStart, OnProcessExit
 from launch_ros.actions import Node
 
@@ -20,13 +18,6 @@ def generate_launch_description():
     slam_toolbox_pkg = 'slam_toolbox'
     lidar_pkg       = 'rplidar_ros'
 
-    robot_id       = LaunchConfiguration('robot_id')
-    ui_id          = LaunchConfiguration('ui_id')
-    ws_uri_primary = LaunchConfiguration('ws_uri_primary')
-
-    declare_robot_id = DeclareLaunchArgument('robot_id',       default_value='TFRB1')
-    declare_ui_id    = DeclareLaunchArgument('ui_id',          default_value='TFUI1')
-    declare_ws_uri   = DeclareLaunchArgument('ws_uri_primary', default_value='wss://tifa-ws.forgixrobotic.com')
 
     # =========================================================================
     # PATHS
@@ -55,29 +46,6 @@ def generate_launch_description():
         PythonLaunchDescriptionSource(
             os.path.join(get_package_share_directory(lidar_pkg), 'launch', 'rplidar_c1_launch.py')
         ),
-    )
-
-    ws_bridge = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('tifa_ws_bridge'), 'launch', 'ws_bridge.launch.py')
-        ),
-        launch_arguments={
-            'ws_uri_primary': ws_uri_primary,
-            'robot_id': robot_id,
-            'network_mode': 'auto'
-        }.items()
-    )
-
-    diagnostic_node = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('tifa_diagnostic_node'), 'launch', 'diagnostic.launch.py')
-        ),
-        launch_arguments={
-            'mode': 'mapping',
-            'robot_id': 'TFRB1',
-            'grace_period_sec': '10',
-            'global_timeout_sec': '60',
-        }.items()
     )
 
     # =========================================================================
@@ -199,69 +167,12 @@ def generate_launch_description():
     )
 
     # =========================================================================
-    # LAYER 4 — robot_api, sensor_manager, slam_supervisor, position_sensor
-    # Jalan setelah diff_cont done + 8s buffer untuk SLAM toolbox init.
-    # slam_supervisor dan position_sensor butuh SLAM topic aktif.
-    # robot_api dan sensor_manager tidak butuh SLAM, tapi kita grup bareng
-    # supaya semua jalan setelah sistem stabil.
-    # =========================================================================
-
-    robot_api = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(
-            os.path.join(get_package_share_directory('tifa_robot_api'), 'launch', 'robot_api.launch.py')
-        ),
-        launch_arguments={
-            'robot_id': robot_id,
-            'ui_id': ui_id
-        }.items()
-    )
-
-    sensor_manager = Node(
-        package='tifa_robot_api',
-        executable='sensor_manager_node',
-        name='sensor_manager_node'
-    )
-
-    slam_supervisor = Node(
-        package='tifa_robot_api',
-        executable='slam_supervisor_node',
-        name='slam_supervisor_node'
-    )
-
-    position_sensor_node = Node(
-        package='tifa_robot_api',
-        executable='position_sensor_node',
-        name='position_sensor_node'
-    )
-
-    layer4_after_slam_init = RegisterEventHandler(
-        event_handler=OnProcessExit(
-            target_action=diff_drive_spawner,
-            on_exit=[
-                TimerAction(period=8.0, actions=[
-                    robot_api,
-                    sensor_manager,
-                    slam_supervisor,
-                    position_sensor_node,
-                ])
-            ]
-        )
-    )
-
-    # =========================================================================
     # RETURN
     # =========================================================================
     return LaunchDescription([
-        # Args
-        declare_robot_id,
-        declare_ui_id,
-        declare_ws_uri,
-
         # Layer 0 — immediate
         rsp,
         rplidar_activate,
-        ws_bridge,
-        diagnostic_node,
 
         # Layer 1 — laser/rf2o langsung, controller_manager 3s timer
         laser_filter_node,
@@ -273,7 +184,4 @@ def generate_launch_description():
 
         # Layer 3 — OnProcessExit(diff_drive_spawner)
         layer3_on_diff_cont_done,
-
-        # Layer 4 — OnProcessExit(diff_drive_spawner) + 8s timer
-        layer4_after_slam_init,
     ])

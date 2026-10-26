@@ -2,29 +2,19 @@
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
   <name>tifa_bringup</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="kiki@todo.todo">kiki</maintainer>
-  <license>TODO: License declaration</license>
+  <version>0.1.0</version>
+  <description>Definisi robot TIFA untuk ORBIT: URDF, ros2_control (fisik dan Gazebo), sensor, rantai cmd_vel, EKF, dan Nav2. Tidak bergantung pada RMF (ADR-004).</description>
+  <maintainer email="kikifachrizi235@gmail.com">kikifachrizi</maintainer>
+  <license>Apache-2.0</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <test_depend>ament_lint_auto</test_depend>
-  <test_depend>ament_lint_common</test_depend>
+  <!-- Node C++: safety_fail_node, publish_initial_pose -->
   <depend>rclcpp</depend>
-  <depend>rclcpp_action</depend>
   <depend>geometry_msgs</depend>
-  <depend>nav2_msgs</depend>
-  <!-- [JAZZY] key rosdep yang benar (nlohmann_json tidak punya rule rosdep) -->
-  <depend>nlohmann-json-dev</depend>
-  <depend>std_msgs</depend>
   <depend>lifecycle_msgs</depend>
 
-  <!-- find_package(PostgreSQL) butuh header saat build -->
-  <depend>libpq-dev</depend>
-
-  <!-- Runtime: node yang dijalankan oleh launch file tifa_bringup,
-       supaya "rosdep install" memasang semuanya di Jazzy -->
+  <!-- Runtime: node yang dijalankan oleh launch file tifa_bringup -->
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>xacro</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
@@ -37,18 +27,18 @@
   <exec_depend>slam_toolbox</exec_depend>
   <exec_depend>navigation2</exec_depend>
   <exec_depend>nav2_common</exec_depend>
-  <exec_depend>diffdrive_arduino</exec_depend>
-  <exec_depend>rplidar_ros</exec_depend>
-  <exec_depend>rf2o_laser_odometry</exec_depend>
-  <exec_depend>tifa_ws_bridge</exec_depend>
-  <exec_depend>tifa_diagnostic_node</exec_depend>
-  <exec_depend>tifa_robot_api</exec_depend>
+  <exec_depend>diffdrive_arduino</exec_depend>      <!-- vendored di src/tifa -->
+  <exec_depend>rf2o_laser_odometry</exec_depend>    <!-- vendored di src/tifa -->
+  <exec_depend>rplidar_ros</exec_depend>            <!-- vendored sementara (ADR-004) -->
 
   <!-- Simulasi (tifa_sim.launch.py) -->
   <exec_depend>ros_gz_sim</exec_depend>
   <exec_depend>ros_gz_bridge</exec_depend>
   <exec_depend>gz_ros2_control</exec_depend>
   <exec_depend>teleop_twist_keyboard</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
