@@ -31,7 +31,7 @@
   <exec_depend>rf2o_laser_odometry</exec_depend>    <!-- vendored di src/tifa -->
   <exec_depend>rplidar_ros</exec_depend>            <!-- vendored sementara (ADR-004) -->
 
-  <!-- Simulasi (tifa_sim.launch.py) -->
+  <!-- Simulasi (robot.launch.py sim:=true) -->
   <exec_depend>ros_gz_sim</exec_depend>
   <exec_depend>ros_gz_bridge</exec_depend>
   <exec_depend>gz_ros2_control</exec_depend>
@@ -42,5 +42,7 @@
 
   <export>
     <build_type>ament_cmake</build_type>
+    <!-- Gazebo menemukan mesh package://tifa_bringup/... lewat ros_gz_sim -->
+    <gazebo_ros gazebo_model_path="${prefix}/.."/>
   </export>
 </package>

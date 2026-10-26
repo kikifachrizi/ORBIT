@@ -2,7 +2,7 @@
 
 ## Ringkasan
 
-`tifa_bringup` adalah **paket runtime robot inti** untuk workspace ROS2 TIFA - Robot Pengantar Makanan. Paket ini menyediakan bringup, navigasi, lokalisasi, keamanan, dan abstraksi hardware lengkap untuk robot layanan indoor differential-drive yang dirancang untuk ber navigasi di lingkungan dinamis seperti Coffee Shop Universitas Telkom.
+`tifa_bringup` adalah **definisi satu robot TIFA untuk ORBIT** (ADR-004): URDF, hardware, sensor, rantai `cmd_vel`, EKF, dan Nav2, untuk robot fisik maupun simulasi. Package ini tidak bergantung pada RMF, jadi robot bisa dijalankan dan di-teleop tanpa ORBIT. TIFA adalah robot pengantar makanan. Paket ini menyediakan bringup, navigasi, lokalisasi, keamanan, dan abstraksi hardware lengkap untuk robot layanan indoor differential-drive yang dirancang untuk ber navigasi di lingkungan dinamis seperti Coffee Shop Universitas Telkom.
 
 Paket ini menangani segala sesuatu mulai dari deskripsi robot URDF dan antarmuka hardware ros2_control, hingga pemrosesan sensor dan estimasi status, hingga orkestrasi stack navigasi Nav2 penuh dengan urutan launch multi-layer.
 
@@ -10,9 +10,15 @@ Paket ini menangani segala sesuatu mulai dari deskripsi robot URDF dan antarmuka
 
 ## Arsitektur
 
-![Arsitektur](Documentation/architecture.png)
+Diagram arsitektur dan pipeline kecepatan ada di repo `tifa` (`src/tifa_bot/Documentation/`). Alur kecepatan:
 
-![Pipeline Kecepatan](Documentation/velocity_pipeline.png)
+```
+teleop (TwistStamped) ---------> diff_cont ------------------+
+Nav2 -> cmd_vel_nav -> velocity_smoother -> cmd_vel_smoothed -+-> twist_mux
+  -> diff_cont/cmd_vel_raw -> safety_fail_node -> diff_cont/cmd_vel -> diff_cont
+```
+
+Semua nama di atas relatif: dengan `namespace:=tifa1` menjadi `/tifa1/...`.
 
 ---
 
@@ -20,42 +26,39 @@ Paket ini menangani segala sesuatu mulai dari deskripsi robot URDF dan antarmuka
 
 ```
 tifa_bringup/
-├── config/                         # Semua file parameter
-│   ├── DWB_params.yaml             # Konfigurasi Nav2 produksi (planner DWB)
-│   ├── MPPI_params.yaml            # Konfigurasi Nav2 alternatif (MPPI, simulasi)
-│   ├── ekf.yaml                    # Konfigurasi sensor fusion EKF
-│   ├── robot_controllers.yaml      # ros2_control diff_drive + joint_state (fisik & sim)
-│   ├── bridge_gazebo.yaml          # ros_gz_bridge: /clock, /scan, /imu (sim)
-│   ├── twist_mux.yaml              # Prioritas multiplexer kecepatan
-│   ├── lidar_filter.yaml           # Filter poligon tubuh LaserScan
-│   └── mapper_params_online_async.yaml  # Konfigurasi SLAM Toolbox
-├── description/                    # File URDF/Xacro robot
-│   ├── robot.urdf.xacro            # Level atas, arg sim_mode (default false = robot fisik)
-│   ├── robot_core.xacro            # Struktur mekanis & kinematic chain
-│   ├── ros2_control.xacro          # Hardware: DiffDriveArduino (fisik) / gz_ros2_control (sim)
-│   ├── lidar.xacro                 # Frame RPLidar C1 + sensor gpu_lidar Gazebo
-│   ├── imu.xacro                   # Frame IMU + sensor IMU Gazebo
-│   └── inertial_macros.xacro       # Macro properti inersia
-├── include/tifa_bringup/               # Header C++
-│   ├── safety_fail_node.hpp
-│   └── (file header)
-├── launch/                         # File launch
-│   ├── launch_robot.launch.py      # Bringup utama (mode navigasi)
-│   ├── tifa_sim.launch.py          # Simulasi Gazebo Harmonic (rantai cmd_vel sama dgn fisik)
-│   ├── manual_mapping.launch.py    # Bringup mode pemetaan SLAM
-│   ├── rsp.launch.py               # Robot State Publisher
-│   ├── localization_launch.py      # Lokalisasi Nav2 (AMCL + map_server)
-│   ├── navigation_launch.py        # Stack navigasi Nav2
+├── config/
+│   ├── DWB_params.yaml             # Nav2 (controller DWB), dipakai robot fisik
+│   ├── MPPI_params.yaml            # Nav2 alternatif (MPPI)
+│   ├── ekf.yaml                    # EKF: odom roda + rf2o + IMU
+│   ├── robot_controllers.yaml      # diff_cont + joint_state_broadcaster (fisik & sim sama)
+│   ├── bridge_gazebo.yaml          # ros_gz_bridge sim: scan, imu (per robot; /clock per world)
+│   ├── twist_mux.yaml              # Prioritas teleop > navigasi
+│   ├── lidar_filter.yaml           # Filter poligon badan robot
+│   └── mapper_params_online_async.yaml  # SLAM Toolbox
+├── description/
+│   ├── robot.urdf.xacro            # Arg sim_mode (default false = fisik) dan namespace (sim)
+│   ├── robot_core.xacro
+│   ├── ros2_control.xacro          # Plugin: DiffDriveArduino (fisik) / gz_ros2_control (sim)
+│   ├── lidar.xacro                 # RPLidar C1 + sensor gpu_lidar Gazebo
+│   ├── imu.xacro                   # IMU + sensor IMU Gazebo
+│   └── inertial_macros.xacro
+├── include/tifa_bringup/safety_fail_node.hpp
+├── launch/
+│   ├── robot.launch.py             # PINTU MASUK satu robot, fisik dan sim
+│   ├── launch_robot.launch.py      # Kompatibilitas: = robot.launch.py sim:=false
+│   ├── manual_mapping.launch.py    # Mode pemetaan SLAM (belum mendukung namespace)
+│   ├── rsp.launch.py               # robot_state_publisher (xacro sim_mode, namespace)
+│   ├── localization_launch.py      # map_server + AMCL
+│   ├── navigation_launch.py        # Stack Nav2
 │   └── laser_filter.launch.py      # Filter laser standalone
-├── maps/                           # Peta occupancy grid yang sudah dibuat
-├── worlds/                         # World Gazebo (telu_coffee.sdf + model telu_coffee/, industrial-warehouse.sdf)
-├── meshes/                         # Mesh STL (disimpan dalam mm, skala ×0.001)
-├── src/                            # File sumber C++
-│   ├── safety_fail_node.cpp
-│   └── publish_initial_pose.cpp
+├── maps/                           # Peta robot fisik (abie_022526, telcoff_map)
+├── meshes/                         # Mesh STL (mm, skala x0.001)
+├── src/                            # safety_fail_node.cpp, publish_initial_pose.cpp
 ├── CMakeLists.txt
 └── package.xml
 ```
+
+World simulasi tidak ada di sini, tetapi di package `orbit_sim`.
 
 ---
 
@@ -97,36 +100,40 @@ Mempublikasikan pose awal ke `/initialpose` untuk lokalisasi AMCL. Menunggu AMCL
 
 ## File Launch
 
-### `launch_robot.launch.py` — Bringup Utama (Mode Navigasi)
+### `robot.launch.py` — Pintu masuk satu robot
 
-Titik masuk utama untuk mengoperasikan robot. Meluncurkan segalanya dalam urutan 4-layer bertahap untuk mengelola inisialisasi hardware dan penundaan konvergensi TF.
+Sama untuk robot fisik dan simulasi. Semua node, topic, dan tf berada di bawah `/<namespace>`; frame tetap `base_link`, `odom`, `map` (pola multi-robot Nav2). File ini tidak pernah menyalakan Gazebo.
 
-**Argumen:**
-
-| Argumen | Default | Deskripsi |
+| Argumen | Default | Keterangan |
 |---|---|---|
-| `robot_id` | `TFRB1` | Identifikasi robot |
-| `ui_id` | `TFUI1` | Identifikasi UI |
-| `ws_uri_primary` | `wss://tifa-ws.forgixrobotic.com` | Endpoint cloud WebSocket |
-| `map` | dari `~/tifa_selected_map.txt` atau `abie_022526.yaml` | Peta yang akan dimuat |
+| `namespace` | kosong | Mis. `tifa1`. Kosong = tanpa namespace |
+| `sim` | `false` | `true` = spawn ke Gazebo yang sudah jalan (gz_ros2_control), `false` = Arduino + RPLidar |
+| `use_sim_time` | = `sim` | |
+| `map` | `maps/abie_022526.yaml` | Peta Nav2 |
+| `nav` | `true` | AMCL + Nav2 |
+| `params_file` | `config/DWB_params.yaml` | Parameter Nav2 |
+| `x`, `y`, `yaw` | `0.0` | Posisi spawn (sim) sekaligus initial pose AMCL |
 
-**Layer startup:**
-1. **Layer 0:** Robot State Publisher, RPLidar C1, WebSocket bridge, diagnostik
-2. **Layer 1:** Filter laser, odometri laser RF2O, controller_manager
-3. **Layer 2:** Pengontrol diff drive, broadcaster state joint, EKF, twist_mux
-4. **Layer 3:** Lokalisasi (+12s), Navigasi (+17s), safety_fail_node (+14s)
-5. **Layer 4:** Pose awal (+20s), robot API (+22s), manajer sensor (+25s)
+| Bagian | Fisik (`sim:=false`) | Sim (`sim:=true`) |
+|---|---|---|
+| Hardware | `ros2_control_node` + `diffdrive_arduino` (jeda 5 s), `rplidar_ros` | `ros_gz_sim create` (entity = namespace), `ros_gz_bridge` |
+| Controller | spawner `joint_state_broadcaster` + `diff_cont` | sama (controller_manager di dalam Gazebo) |
+| Rantai | filter, rf2o, EKF, twist_mux, safety | sama |
+| Nav2 (`nav:=true`) | localization +17 s, navigation +22 s, initial pose +25 s | sama |
 
-**Jalankan:**
-```bash
-ros2 launch tifa_bringup launch_robot.launch.py map:=abie_022526.yaml
-```
+Urutan nyala memakai `TimerAction`: aksi dari event handler (`OnProcessStart`/`OnProcessExit`) berjalan di luar `PushRosNamespace` dan node-nya kehilangan namespace.
+
+---
+
+### `launch_robot.launch.py` — Kompatibilitas
+
+Sama dengan `robot.launch.py sim:=false`, untuk perintah lama di robot. Peta tidak lagi dibaca dari `~/tifa_selected_map.txt`; berikan lewat argumen `map`.
 
 ---
 
 ### `manual_mapping.launch.py` — Mode Pemetaan SLAM
 
-Setara dengan `launch_robot.launch.py` tetapi menggunakan **SLAM Toolbox** sebagai pengganti AMCL + map_server. Termasuk `slam_supervisor_node` dan `position_sensor_node` untuk manajemen sesi pemetaan.
+Robot fisik dengan **SLAM Toolbox** sebagai pengganti AMCL + map_server, untuk membuat peta baru. Belum mendukung `namespace` (pemetaan dilakukan satu robot).
 
 **Jalankan:**
 ```bash
@@ -139,19 +146,6 @@ ros2 launch tifa_bringup manual_mapping.launch.py
 
 Mempublikasikan deskripsi robot URDF dengan memproses `robot.urdf.xacro` melalui xacro.
 Argumen `sim_mode` (default `false`) memilih plugin hardware: `false` = DiffDriveArduino (robot fisik), `true` = `gz_ros2_control` (Gazebo).
-
----
-
-### `tifa_sim.launch.py` — Simulasi Gazebo Harmonic
-
-Menjalankan Gazebo, spawn robot (`sim_mode:=true`), bridge `/clock` `/scan` `/imu`, controller `diff_cont` + `joint_state_broadcaster` (di dalam Gazebo), lalu rantai yang **sama** dengan robot fisik: laser filter, rf2o, EKF, twist_mux, `safety_fail_node`. Nav2 belum diikutkan.
-
-| Argumen | Default | Keterangan |
-|---------|---------|------------|
-| `world` | `worlds/telu_coffee.sdf` | World SDF (model lokal `worlds/telu_coffee/`). Alternatif: `worlds/industrial-warehouse.sdf` (model Gazebo Fuel, butuh cache/internet saat pertama) |
-| `gz_args` | `-r -v 1` | `-r -s --headless-rendering -v 1` untuk tanpa GUI |
-| `x`, `y`, `yaw` | `0.0` | Posisi spawn |
-| `use_sim_time` | `true` | |
 
 ---
 
@@ -267,68 +261,44 @@ Peta fallback default adalah `abie_022526.yaml`.
 
 ## Dependensi
 
-### Paket ROS 2
-- `rclcpp` — Pustaka klien C++
-- `rclcpp_action` — Dukungan aksi
-- `geometry_msgs` — Primitif geometri
-- `nav2_msgs` — Pesan Navigation2
-- `std_msgs` — Pesan standar
-- `lifecycle_msgs` — Manajemen lifecycle
-- `sensor_msgs` — Pesan sensor
-- `rcl_interfaces` — Antarmuka parameter ROS 2
-
-### Pustaka Eksternal
-- `nlohmann_json` — JSON untuk Modern C++
-- `PostgreSQL` (`libpq-dev`) — Klien database
-
-### Dependensi Runtime (paket saudara)
-- `tifa_ws_bridge` — Konektivitas cloud WebSocket
-- `tifa_diagnostic_node` — Pemantauan kesehatan
-- `tifa_robot_api` — Kontrol robot tingkat aplikasi
-- `rplidar_ros` — Driver RPLidar
-- `rf2o_laser_odometry` — Odometri berbasis laser
-- `laser_filters` — Pemindaian filter
-- `slam_toolbox` — Pemetaan SLAM online
-- `nav2_bringup` — Stack Navigation2
-- `robot_localization` — Sensor fusion EKF/UKF
+- Node C++: `rclcpp`, `geometry_msgs`, `lifecycle_msgs`.
+- Runtime: `robot_state_publisher`, `xacro`, `controller_manager`, `diff_drive_controller`, `joint_state_broadcaster`, `twist_mux`, `laser_filters`, `robot_localization`, `slam_toolbox`, `navigation2`.
+- Vendored di `src/tifa/`: `diffdrive_arduino`, `rf2o_laser_odometry`, `rplidar_ros` (sementara, lihat ADR-004).
+- Simulasi: `ros_gz_sim`, `ros_gz_bridge`, `gz_ros2_control`. World ada di `orbit_sim`.
+- Tidak bergantung pada RMF maupun package ORBIT lain.
 
 ---
 
 ## Build & Jalankan
 
-### Build
-
 ```bash
-cd ~/work/abie/tifa
-colcon build --packages-select tifa_bringup
-source install/setup.bash
+cd ~/ORBIT
+colcon build --packages-up-to tifa_bringup orbit_sim
+source install/setup.zsh     # setup.bash bila memakai bash
 ```
 
-### Jalankan (Mode Navigasi)
+### Robot fisik
 
 ```bash
-ros2 launch tifa_bringup launch_robot.launch.py map:=abie_022526.yaml
+ros2 launch tifa_bringup robot.launch.py namespace:=tifa1 map:=/path/peta.yaml
 ```
 
-### Jalankan (Simulasi + Teleop)
+### Simulasi: satu atau dua robot dalam satu world
 
 ```bash
-ros2 launch tifa_bringup tifa_sim.launch.py
-# terminal lain: teleop masuk ke input teleop twist_mux (/diff_cont, TwistStamped)
+ros2 launch orbit_sim world.launch.py site:=test_room
+MAP=$(ros2 pkg prefix orbit_sim)/share/orbit_sim/sites/test_room/maps/test_room.yaml
+ros2 launch tifa_bringup robot.launch.py sim:=true namespace:=tifa1 x:=-2.5 y:=0.5 map:=$MAP
+ros2 launch tifa_bringup robot.launch.py sim:=true namespace:=tifa2 x:=0.5 y:=-0.5 map:=$MAP
+# teleop ke satu robot (input teleop twist_mux, TwistStamped)
 ros2 run teleop_twist_keyboard teleop_twist_keyboard --ros-args \
-    -p stamped:=true -p frame_id:=base_link -r cmd_vel:=/diff_cont
+    -p stamped:=true -p frame_id:=base_link -r cmd_vel:=/tifa1/diff_cont
 ```
 
-### Jalankan (Mode Pemetaan)
+### Mode pemetaan
 
 ```bash
 ros2 launch tifa_bringup manual_mapping.launch.py
-```
-
-### Jalankan (Filter Laser Standalone)
-
-```bash
-ros2 launch tifa_bringup laser_filter.launch.py
 ```
 
 ---

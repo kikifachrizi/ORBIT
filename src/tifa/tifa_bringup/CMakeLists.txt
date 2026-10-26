@@ -65,7 +65,6 @@ install(
     launch
     meshes
     maps
-    worlds
   DESTINATION share/${PROJECT_NAME}
 )
 
