@@ -117,7 +117,7 @@ int main(int argc, char ** argv)
   // memastikan message tidak hilang meski subscriber sedikit terlambat.
   auto qos = rclcpp::QoS(1).transient_local();
   auto pub = node->create_publisher<geometry_msgs::msg::PoseWithCovarianceStamped>(
-    "/initialpose", qos);
+    "initialpose", qos);
 
   geometry_msgs::msg::PoseWithCovarianceStamped msg;
   msg.header.frame_id = "map";
@@ -132,7 +132,7 @@ int main(int argc, char ** argv)
   std::atomic<bool> amcl_pose_received{false};
 
   auto amcl_sub = node->create_subscription<geometry_msgs::msg::PoseWithCovarianceStamped>(
-    "/amcl_pose", rclcpp::QoS(1),
+    "amcl_pose", rclcpp::QoS(1),
     [&](const geometry_msgs::msg::PoseWithCovarianceStamped::SharedPtr) {
       if (!amcl_pose_received.exchange(true)) {
         RCLCPP_INFO(node->get_logger(),

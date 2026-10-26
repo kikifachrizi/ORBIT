@@ -18,7 +18,7 @@
 # PERBEDAAN DARI VERSI SEBELUMNYA (versi user & versi outputs/):
 #   - global_costmap: HAPUS obstacle_layer (ini yang menyebabkan abort)
 #   - robot_base_frame semua node: base_link (konsisten dgn EKF & URDF)
-#   - odom_topic bt_navigator: /odometry/filtered (output EKF)
+#   - odom_topic bt_navigator: odometry/filtered (output EKF)
 #   - max_vel_x: 0.35 m/s (naik dari 0.18)
 #   - acc_lim_x: 0.3 m/s² (HALUS, bukan 1.2 yg menghentak)
 #   - decel_lim_x: -0.5 m/s² (lebih cepat dari accel, safety)
@@ -76,7 +76,7 @@ bt_navigator:
     use_sim_time: False
     global_frame: map
     robot_base_frame: base_link             # ROOT frame URDF → konsisten dgn EKF
-    odom_topic: /odometry/filtered          # OUTPUT EKF robot_localization, bukan raw /odom
+    odom_topic: odometry/filtered          # OUTPUT EKF robot_localization, bukan raw /odom
     bt_loop_duration: 10
     default_server_timeout: 200
     wait_for_service_timeout: 500
@@ -103,7 +103,7 @@ controller_server:
     min_x_velocity_threshold: 0.001
     min_y_velocity_threshold: 0.5
     min_theta_velocity_threshold: 0.001
-    odom_topic: /odometry/filtered          # kecepatan robot untuk DWB (default "odom" tidak ada publisher)
+    odom_topic: odometry/filtered          # kecepatan robot untuk DWB (default "odom" tidak ada publisher)
     enable_stamped_cmd_vel: true           # [JAZZY] publish TwistStamped (diff_drive_controller Jazzy hanya terima TwistStamped)
     # 0.3 dtk: lebih cepat trigger recovery jika robot benar-benar stuck
     # (bukan 0.5 yg terlalu sabar — robot bisa diam sangat lama tanpa progress)
@@ -216,7 +216,7 @@ local_costmap:
         mark_threshold: 0
         observation_sources: scan
         scan:
-          topic: /scan_filtered
+          topic: scan_filtered
           max_obstacle_height: 2.0
           clearing: True
           marking: True
@@ -354,7 +354,7 @@ velocity_smoother:
     min_velocity: [-0.35, 0.0, -0.8]
     max_accel: [0.3, 0.0, 1.0]            # MATCH DWB acc_lim — smooth
     max_decel: [-0.5, 0.0, -1.5]          # MATCH DWB decel_lim
-    odom_topic: "/odometry/filtered"     # hanya dipakai jika feedback CLOSED_LOOP
+    odom_topic: "odometry/filtered"     # hanya dipakai jika feedback CLOSED_LOOP
     odom_duration: 0.1
     deadband_velocity: [0.01, 0.0, 0.01]  # eliminasi micro-slip
     velocity_timeout: 1.0

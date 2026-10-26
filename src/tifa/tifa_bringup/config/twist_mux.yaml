@@ -1,18 +1,19 @@
-twist_mux:
+# Prefix /**/ dan topic relatif: berlaku juga di namespace robot (/tifa1/...).
+/**/twist_mux:
   ros__parameters:
     # [JAZZY] input & output TwistStamped (default twist_mux Jazzy = true).
     # Semua publisher ke topic di bawah HARUS TwistStamped.
     use_stamped: true
     topics:
       # Output velocity_smoother. controller_server & behavior_server (spin/backup)
-      # publish ke /cmd_vel_nav -> velocity_smoother -> /cmd_vel_smoothed
+      # publish ke cmd_vel_nav -> velocity_smoother -> cmd_vel_smoothed
       navigation:
-        topic   : /cmd_vel_smoothed
+        topic   : cmd_vel_smoothed
         timeout : 0.5
         priority: 10
 
-      # robot_api publish teleop ke /diff_cont (konfirmasi dari ros2 node info)
+      # teleop (robot_api / teleop_twist_keyboard) publish ke diff_cont
       teleop:
-        topic   : /diff_cont
+        topic   : diff_cont
         timeout : 0.5
         priority: 20

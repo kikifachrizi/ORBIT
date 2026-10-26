@@ -1,4 +1,4 @@
-ekf_filter_node:
+/**/ekf_filter_node:
   ros__parameters:
     frequency: 30.0
     two_d_mode: true
@@ -18,9 +18,9 @@ ekf_filter_node:
     world_frame: odom
 
     # Wheel encoder odometry — velocity only (no pose drift accumulation)
-    # diff_drive_controller (diff_cont) publish ke ~/odom = /diff_cont/odom.
+    # diff_drive_controller (diff_cont) publish ke ~/odom = diff_cont/odom.
     # /odom tidak punya publisher, jadi sebelumnya EKF tidak pernah dapat data roda.
-    odom0: /diff_cont/odom
+    odom0: diff_cont/odom
     odom0_config: [false, false, false,
                    false, false, false,
                    true,  false, false,
@@ -35,7 +35,7 @@ ekf_filter_node:
     # TUNED: Set differential=true to prevent RF2O absolute pose from
     # fighting wheel odom when RF2O has accumulated drift.
     # RF2O drift is treated as incremental correction, not ground truth.
-    odom1: /odom_rf2o
+    odom1: odom_rf2o
     odom1_config: [true,  true,  false,
                    false, false, true,
                    false, false, false,
@@ -46,13 +46,13 @@ ekf_filter_node:
     odom1_queue_size: 5
 
     # IMU — kecepatan sudut yaw saja (gyro z)
-    # Simulasi: sensor imu Gazebo -> ros_gz_bridge -> /imu (frame imu_link,
+    # Simulasi: sensor imu Gazebo -> ros_gz_bridge -> imu (frame imu_link,
     # diputar 180° terhadap chassis; EKF mentransformasikannya lewat TF).
     # Orientasi absolut tidak di-fuse: IMU Gazebo memberi yaw "sempurna" tanpa
     # drift yang tidak realistis, dan robot fisik tidak punya magnetometer.
     # Akselerasi tidak di-fuse: terlalu noisy untuk integrasi kecepatan.
     # Robot fisik belum punya IMU -> topik kosong, EKF tetap jalan dengan odom0/odom1.
-    imu0: /imu
+    imu0: imu
     imu0_config: [false, false, false,
                   false, false, false,
                   false, false, false,

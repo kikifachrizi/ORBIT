@@ -21,8 +21,8 @@ def generate_launch_description():
                 {'use_sim_time': False}  
             ],
             remappings=[
-                ('scan', '/scan'),
-                ('scan_filtered', '/scan_filtered')
+                ('scan', 'scan'),
+                ('scan_filtered', 'scan_filtered')
             ]
         )
     ])

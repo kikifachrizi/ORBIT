@@ -12,11 +12,11 @@ SafetyFailNode::SafetyFailNode()
 
   // Jazzy: diff_drive_controller hanya menerima TwistStamped di ~/cmd_vel
   cmd_vel_sub_ = this->create_subscription<geometry_msgs::msg::TwistStamped>(
-    "/diff_cont/cmd_vel_raw", 10,
+    "diff_cont/cmd_vel_raw", 10,
     std::bind(&SafetyFailNode::cmdVelCallback, this, _1));
 
   safe_cmd_pub_ = this->create_publisher<geometry_msgs::msg::TwistStamped>(
-    "/diff_cont/cmd_vel", 10);
+    "diff_cont/cmd_vel", 10);
 
   watchdog_timer_ = this->create_wall_timer(
     std::chrono::milliseconds(50),

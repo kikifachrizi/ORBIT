@@ -60,7 +60,7 @@ def generate_launch_description():
         package='laser_filters',
         executable='scan_to_scan_filter_chain',
         parameters=[lidar_filter_config, {'use_sim_time': False}],
-        remappings=[('scan', '/scan'), ('scan_filtered', '/scan_filtered')]
+        remappings=[('scan', 'scan'), ('scan_filtered', 'scan_filtered')]
     )
     rf2o_node = Node(
         package='rf2o_laser_odometry',
@@ -69,7 +69,7 @@ def generate_launch_description():
         output='log',
         arguments=['--ros-args', '--log-level', 'warn'],
         parameters=[{
-            'laser_scan_topic': '/scan_filtered', 'odom_topic': '/odom_rf2o',
+            'laser_scan_topic': 'scan_filtered', 'odom_topic': 'odom_rf2o',
             'publish_tf': False, 'base_frame_id': 'base_link',
             'odom_frame_id': 'odom', 'init_pose_from_topic': '', 'freq': 10.0
         }],
@@ -102,7 +102,7 @@ def generate_launch_description():
         package='twist_mux', executable='twist_mux', name='twist_mux', output='log',
         arguments=['--ros-args', '--log-level', 'warn'],
         parameters=[twist_mux_config],
-        remappings=[('cmd_vel_out', '/diff_cont/cmd_vel_raw')]  # absolute path, TwistStamped → safety_fail_node
+        remappings=[('cmd_vel_out', 'diff_cont/cmd_vel_raw')]  # relatif, TwistStamped → safety_fail_node
     )
 
     layer2_on_controller_start = RegisterEventHandler(
