@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>tifa_bringup</name>
+  <version>0.1.0</version>
+  <description>Definisi robot TIFA untuk ORBIT: URDF, ros2_control (fisik dan Gazebo), sensor, rantai cmd_vel, EKF, dan Nav2. Tidak bergantung pada RMF (ADR-004).</description>
+  <maintainer email="kikifachrizi235@gmail.com">kikifachrizi</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- Node C++: safety_fail_node, publish_initial_pose -->
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+  <depend>lifecycle_msgs</depend>
+
+  <!-- Runtime: node yang dijalankan oleh launch file tifa_bringup -->
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>twist_mux</exec_depend>
+  <exec_depend>laser_filters</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>slam_toolbox</exec_depend>
+  <exec_depend>navigation2</exec_depend>
+  <exec_depend>nav2_common</exec_depend>
+  <exec_depend>diffdrive_arduino</exec_depend>      <!-- vendored di src/tifa -->
+  <exec_depend>rf2o_laser_odometry</exec_depend>    <!-- vendored di src/tifa -->
+  <exec_depend>rplidar_ros</exec_depend>            <!-- vendored sementara (ADR-004) -->
+
+  <!-- Simulasi (robot.launch.py sim:=true) -->
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>gz_ros2_control</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <!-- Gazebo menemukan mesh package://tifa_bringup/... lewat ros_gz_sim -->
+    <gazebo_ros gazebo_model_path="${prefix}/.."/>
+  </export>
+</package>

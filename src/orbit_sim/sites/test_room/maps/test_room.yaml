@@ -1,0 +1,9 @@
+# Peta site test_room (dibuat dari geometri test_room.sdf, bukan SLAM).
+# Frame map = frame world Gazebo, jadi pose spawn (x, y, yaw) = initial pose AMCL.
+image: test_room.pgm
+mode: trinary
+resolution: 0.05
+origin: [-4.5, -3.5, 0.0]
+negate: 0
+occupied_thresh: 0.65
+free_thresh: 0.25

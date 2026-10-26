@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="tifa">
+
+    <!-- sim_mode = true  -> hardware Gazebo (gz_ros2_control)
+         sim_mode = false -> hardware asli (diffdrive_arduino). Default aman = robot fisik. -->
+    <xacro:arg name="sim_mode" default="false"/>
+
+    <!-- namespace robot (mis. tifa1). Hanya dipakai di sim: prefix topic sensor Gazebo
+         dan namespace controller_manager di dalam Gazebo. Kosong = tanpa namespace. -->
+    <xacro:arg name="namespace" default=""/>
+
+    <xacro:include filename="robot_core.xacro"/>
+
+    <!-- Hardware - satu blok ros2_control, plugin dipilih oleh sim_mode -->
+    <xacro:include filename="ros2_control.xacro"/>
+
+    <!-- Sensor (tag <gazebo> hanya dibaca Gazebo, diabaikan di robot fisik) -->
+    <xacro:include filename="lidar.xacro"/>
+    <xacro:include filename="imu.xacro"/>
+
+</robot>

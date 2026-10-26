@@ -1,0 +1,14 @@
+# Bridge sensor satu robot. Node bridge berjalan di namespace robot dan
+# expand_gz_topic_names: true, jadi "scan" = /<ns>/scan di ROS dan di Gazebo
+# (sama dengan <topic>$(arg namespace)/scan</topic> di lidar.xacro).
+# /clock tidak di sini: satu jam Gazebo di-bridge sekali per world (orbit_sim world.launch.py).
+- topic_name: "scan"
+  ros_type_name: "sensor_msgs/msg/LaserScan"
+  gz_type_name: "gz.msgs.LaserScan"
+  direction: GZ_TO_ROS
+  lazy: false
+
+- topic_name: "imu"
+  ros_type_name: "sensor_msgs/msg/Imu"
+  gz_type_name: "gz.msgs.IMU"
+  direction: GZ_TO_ROS
