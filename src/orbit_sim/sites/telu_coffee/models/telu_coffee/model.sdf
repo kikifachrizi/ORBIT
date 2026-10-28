@@ -1,0 +1,2442 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="telu_coffee">
+    <static>true</static>
+    
+    <link name="wall_west">
+      <pose>-8.000 0.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.200 8.000 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.200 8.000 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_east">
+      <pose>8.000 0.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.200 8.000 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.200 8.000 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_south_solid_east">
+      <pose>6.810 -4.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>2.380 0.200 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>2.380 0.200 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_south_t4_base">
+      <pose>2.810 -4.000 0.445 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>5.620 0.200 0.890</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>5.620 0.200 0.890</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_south_window_t4_3_1">
+      <pose>4.918 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_window_t4_3_2">
+      <pose>3.513 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_window_t4_3_3">
+      <pose>2.107 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_window_t4_3_4">
+      <pose>0.702 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_mid_base">
+      <pose>-2.600 -4.000 0.445 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>4.200 0.200 0.890</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>4.200 0.200 0.890</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_south_window_mid_1">
+      <pose>-1.200 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_window_mid_2">
+      <pose>-2.600 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_window_mid_3">
+      <pose>-4.000 -4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>0.93333 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_south_solid_west">
+      <pose>-6.350 -4.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>3.300 0.200 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>3.300 0.200 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_north_west">
+      <pose>-6.760 4.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>2.480 0.200 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>2.480 0.200 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="door_1_leaf1">
+      <pose>-5.140 4.000 0.000 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm_Col.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm.obj</uri></mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <pose>0 0 1.025 0 0 0</pose>
+        <geometry>
+          <box><size>0.68 0.02 1.85</size></box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="door_1_leaf2">
+      <pose>-4.380 4.000 0.000 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm_Col.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm.obj</uri></mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <pose>0 0 1.025 0 0 0</pose>
+        <geometry>
+          <box><size>0.68 0.02 1.85</size></box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_lintel1">
+      <pose>-4.760 4.000 3.050 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>1.520 0.200 1.900</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>1.520 0.200 1.900</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_north_t4_1_base">
+      <pose>-2.250 4.000 0.445 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>3.500 0.200 0.890</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>3.500 0.200 0.890</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_north_window_t4_1_1">
+      <pose>-3.125 4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>1.16667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>1.16667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>1.16667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_window_t4_1_2">
+      <pose>-1.375 4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>1.16667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>1.16667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>1.16667 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_t4_2_base">
+      <pose>2.500 4.000 0.445 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>5.000 0.200 0.890</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>5.000 0.200 0.890</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_north_window_t4_2_1">
+      <pose>0.833 4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_window_t4_2_2">
+      <pose>2.500 4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_window_t4_2_3">
+      <pose>4.167 4.000 0.890 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Panel_150cm_Col.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Frame_150cm.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <geometry>
+          <mesh>
+            <uri>model://GlassWindow/meshes/GlassWindow_Glass_150cm.obj</uri>
+            <scale>1.11111 1.0 1.0</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_mid">
+      <pose>5.490 4.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.980 0.200 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.980 0.200 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="door_2_leaf1">
+      <pose>6.360 4.000 0.000 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm_Col.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm.obj</uri></mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <pose>0 0 1.025 0 0 0</pose>
+        <geometry>
+          <box><size>0.68 0.02 1.85</size></box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="door_2_leaf2">
+      <pose>7.120 4.000 0.000 0 0 0.000000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm_Col.obj</uri></mesh>
+        </geometry>
+      </collision>
+      <visual name="visual_frame">
+        <geometry>
+          <mesh><uri>model://GlassDoor/meshes/GlassDoor_Panel_76cm.obj</uri></mesh>
+        </geometry>
+        <material>
+          <ambient>0.1 0.1 0.1 1.0</ambient>
+          <diffuse>0.15 0.15 0.15 1.0</diffuse>
+          <pbr>
+            <metal>
+              <metalness>0.8</metalness>
+              <roughness>0.2</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+      <visual name="visual_glass">
+        <pose>0 0 1.025 0 0 0</pose>
+        <geometry>
+          <box><size>0.68 0.02 1.85</size></box>
+        </geometry>
+        <material>
+          <ambient>0.6 0.75 0.85 0.25</ambient>
+          <diffuse>0.6 0.75 0.85 0.25</diffuse>
+          <specular>0.9 0.95 1.0 1.0</specular>
+          <pbr>
+            <metal>
+              <metalness>0.0</metalness>
+              <roughness>0.05</roughness>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+    <link name="wall_north_lintel2">
+      <pose>6.740 4.000 3.050 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>1.520 0.200 1.900</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>1.520 0.200 1.900</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="wall_north_east">
+      <pose>7.750 4.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.500 0.200 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.500 0.200 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="tembok">
+      <pose>-4.850 -2.500 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.300 3.000 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.300 3.000 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="bathroom">
+      <pose>-5.500 -3.000 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>1.000 2.000 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>1.000 2.000 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="gudang">
+      <pose>-6.993 -1.743 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>1.972 4.472 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>1.972 4.472 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="rect10482">
+      <pose>-0.250 3.600 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.500 0.800 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.500 0.800 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="rect10482-3">
+      <pose>-0.250 -3.600 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.500 0.800 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.500 0.800 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="rect10899">
+      <pose>7.750 -3.750 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.500 0.500 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.500 0.500 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="rect10899-6">
+      <pose>7.750 3.750 2.000 0 0 0</pose>
+      <collision name="collision"><geometry><box><size>0.500 0.500 4.000</size></box></geometry></collision>
+      <visual name="visual">
+        <geometry><box><size>0.500 0.500 4.000</size></box></geometry>
+        <material><ambient>0.1 0.1 0.1 1</ambient><diffuse>0.1 0.1 0.1 1</diffuse></material>
+      </visual>
+    </link>
+    <link name="meja_barista">
+      <pose>-6.000 2.250 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://KitchenCountertop/meshes/BaristaCounter_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://KitchenCountertop/meshes/BaristaCounter.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="bookshelf_1">
+      <pose>-5.035 0.350 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://SquareShelf/meshes/SquareShelf_Col.obj</uri>
+            <scale>2.5107 0.7655 2.6036</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://SquareShelf/meshes/SquareShelf.obj</uri>
+            <scale>2.5107 0.7655 2.6036</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="bookshelf">
+      <pose>7.750 2.750 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://SquareShelf/meshes/SquareShelf_Col.obj</uri>
+            <scale>3.2522 1.2759 2.6036</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://SquareShelf/meshes/SquareShelf.obj</uri>
+            <scale>3.2522 1.2759 2.6036</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t4_1">
+      <pose>-2.250 3.750 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://FoodCourtTable1/meshes/BarTable_T4_1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://FoodCourtTable1/meshes/BarTable_T4_1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t4_2">
+      <pose>2.500 3.750 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://FoodCourtTable1/meshes/BarTable_T4_2_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://FoodCourtTable1/meshes/BarTable_T4_2.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t4_3">
+      <pose>2.250 -3.750 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://FoodCourtTable1/meshes/BarTable_T4_3_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://FoodCourtTable1/meshes/BarTable_T4_3.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_1_1">
+      <pose>-3.300 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_1_2">
+      <pose>-2.600 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_1_3">
+      <pose>-1.900 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_1_4">
+      <pose>-1.200 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_2_1">
+      <pose>1.000 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_2_2">
+      <pose>2.000 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_2_3">
+      <pose>3.000 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_2_4">
+      <pose>4.000 3.400 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_3_1">
+      <pose>0.750 -3.400 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_3_2">
+      <pose>1.750 -3.400 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_3_3">
+      <pose>2.750 -3.400 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_t4_3_4">
+      <pose>3.750 -3.400 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/BarStool_77cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_1">
+      <pose>-2.600 1.770 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_1_s1">
+      <pose>-2.850 1.420 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_1_s2">
+      <pose>-2.350 1.420 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_1_n1">
+      <pose>-2.850 2.120 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_1_n2">
+      <pose>-2.350 2.120 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_2">
+      <pose>-0.600 1.770 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_2_s1">
+      <pose>-0.850 1.420 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_2_s2">
+      <pose>-0.350 1.420 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_2_n1">
+      <pose>-0.850 2.120 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_2_n2">
+      <pose>-0.350 2.120 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_3">
+      <pose>1.300 1.770 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_3_s1">
+      <pose>1.050 1.420 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_3_s2">
+      <pose>1.550 1.420 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_3_n1">
+      <pose>1.050 2.120 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_3_n2">
+      <pose>1.550 2.120 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_4">
+      <pose>-2.610 -0.840 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_4_s1">
+      <pose>-2.860 -1.190 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_4_s2">
+      <pose>-2.360 -1.190 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_4_n1">
+      <pose>-2.860 -0.490 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_4_n2">
+      <pose>-2.360 -0.490 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_5">
+      <pose>-0.610 -0.840 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_5_s1">
+      <pose>-0.860 -1.190 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_5_s2">
+      <pose>-0.360 -1.190 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_5_n1">
+      <pose>-0.860 -0.490 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_5_n2">
+      <pose>-0.360 -0.490 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_6">
+      <pose>1.290 -0.840 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_6_s1">
+      <pose>1.040 -1.190 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_6_s2">
+      <pose>1.540 -1.190 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_6_n1">
+      <pose>1.040 -0.490 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_6_n2">
+      <pose>1.540 -0.490 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t1_7">
+      <pose>-3.390 -2.920 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Table/meshes/Table_T1.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_7_s1">
+      <pose>-3.640 -3.270 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_7_s2">
+      <pose>-3.140 -3.270 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_7_n1">
+      <pose>-3.640 -2.570 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t1_7_n2">
+      <pose>-3.140 -2.570 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t2_1">
+      <pose>3.750 1.770 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T2_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T2.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_1_n">
+      <pose>3.750 2.500 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_1_s">
+      <pose>3.750 1.040 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_1_e">
+      <pose>4.480 1.770 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_1_w">
+      <pose>3.020 1.770 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t2_2">
+      <pose>6.160 0.040 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T2_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T2.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_2_n">
+      <pose>6.160 0.770 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_2_s">
+      <pose>6.160 -0.690 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_2_e">
+      <pose>6.890 0.040 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_2_w">
+      <pose>5.430 0.040 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t2_3">
+      <pose>3.740 -0.790 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T2_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T2.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_3_n">
+      <pose>3.740 -0.060 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_3_s">
+      <pose>3.740 -1.520 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_3_e">
+      <pose>4.470 -0.790 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t2_3_w">
+      <pose>3.010 -0.790 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t3_4">
+      <pose>-1.510 -2.890 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T3_4_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://CoffeeTable/meshes/CoffeeTable_T3_4.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_4_n">
+      <pose>-1.510 -2.310 0.000 0.0000 0.0000 -1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_4_s">
+      <pose>-1.510 -3.470 0.000 0.0000 0.0000 1.5708</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_4_e">
+      <pose>-0.930 -2.890 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_4_w">
+      <pose>-2.090 -2.890 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://WoodenChair/meshes/WoodenChair.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t3_1">
+      <pose>6.140 2.510 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://ConfTable/meshes/ConfTable_Col.obj</uri>
+            <scale>0.441176 0.615385 0.867838</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://ConfTable/meshes/ConfTable.obj</uri>
+            <scale>0.441176 0.615385 0.867838</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_1_small1">
+      <pose>5.790 2.010 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_1_small2">
+      <pose>6.490 2.010 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_1_bench">
+      <pose>6.140 3.010 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Bench_120cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Bench_120cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="meja_t3_2">
+      <pose>6.090 -2.690 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://ConfTable/meshes/ConfTable_Col.obj</uri>
+            <scale>0.441176 0.615385 0.867838</scale>
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://ConfTable/meshes/ConfTable.obj</uri>
+            <scale>0.441176 0.615385 0.867838</scale>
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_2_small1">
+      <pose>5.740 -2.190 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_2_small2">
+      <pose>6.440 -2.190 0.000 0.0000 0.0000 0.0000</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Meters.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+    <link name="kursi_meja_t3_2_bench">
+      <pose>6.090 -3.190 0.000 0.0000 0.0000 3.1416</pose>
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Bench_120cm_Col.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </collision>
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://Chair/meshes/Chair_Bench_120cm.obj</uri>
+            
+          </mesh>
+        </geometry>
+      </visual>
+    </link>
+  </model>
+</sdf>

@@ -38,8 +38,8 @@ ORBIT/
 ├── orbit.repos                # source dependency khusus dev/referensi (bukan runtime)
 ├── src/
 │   ├── orbit_adapter/         # fleet adapter RMF: core + backend nav2 + backend graph (ADR-002)
-│   ├── orbit_sim/             # building.yaml (traffic editor), nav graph & world hasil generate,
-│   │                          # occupancy map Nav2, model simulasi TIFA/NEVO
+│   ├── orbit_sim/             # models/ (perabot bersama + ATTRIBUTION.md), sites/<site>/: world .sdf,
+│   │                          # bangunan, peta Nav2, nanti building.yaml + nav graph (traffic editor)
 │   ├── orbit_bringup/         # launch site (RMF + adapter, + Gazebo saat sim), config fleet per site (ADR-004)
 │   ├── tifa/tifa_bringup/     # definisi robot TIFA: URDF, hardware, Nav2; tanpa RMF (ADR-004)
 │   ├── nevo/nevo_bringup/     # definisi robot NEVO, kontrak sama
@@ -53,8 +53,9 @@ ORBIT/
 
 1. Dependency runtime hanya boleh berasal dari apt/rosdep Jazzy dan dideklarasikan di `package.xml`.
 2. Tidak ada dependency runtime ke paket pip atau paket yang hanya tersedia dari source (`free_fleet`, `nudged`, `rmf_demos_gz`, `rmf_demos_maps`). Transformasi koordinat memakai `numpy`.
-3. Model dan world simulasi di-bundle di `orbit_sim`; tidak bergantung pada unduhan Gazebo Fuel saat runtime.
+3. Model dan world simulasi di-bundle di `orbit_sim`; tidak bergantung pada unduhan Gazebo Fuel saat runtime. Perabot dipakai bersama di `orbit_sim/models/`, bangunan per site di `orbit_sim/sites/<site>/models/<site>/`; `world.launch.py` menaruh keduanya di depan `GZ_SIM_RESOURCE_PATH`.
 4. Contoh komunitas (`free_fleet`, `ionic_demo`, `rmf_demos_gz`) hanya boleh muncul di `orbit.repos` untuk workspace dev.
+5. Setiap model pihak ketiga yang di-bundle (mis. dari Gazebo Fuel) wajib tercatat di `orbit_sim/models/ATTRIBUTION.md`: pembuat, sumber, lisensi, dan perubahan. Model CC-BY 4.0 wajib diberi atribusi karena repo publik dan `.deb` ikut mendistribusikannya. Model tanpa lisensi yang jelas tidak boleh di-bundle.
 
 ### Artifact release
 
