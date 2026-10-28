@@ -77,4 +77,5 @@ Perbaikan wajib sebelum merge: semua topic relatif (termasuk yang hardcoded di `
 | `rosdep keys --from-paths src/tifa` | Tidak ada key `rmf_*` | NOT RUN |
 | `orbit.launch.py mode:=sim` dengan dua robot | Semua node robot di bawah `/tifa1`, `/nevo1`; adapter menerima status keduanya | NOT RUN |
 | `orbit_sim world.launch.py site:=test_room` + 2× `tifa_bringup robot.launch.py sim:=true` (`tifa1`, `tifa2`), `nav:=true` | Dua entity, 2×2 controller active, scan 10 Hz per robot, satu publisher `/clock`, teleop terisolasi, goal Nav2 keduanya SUCCEEDED | PASS (26 Okt 2026). Catatan: satu kali dari tiga run goal `tifa2` ABORTED karena `compute_path_to_pose` timeout saat CPU penuh (load 11) |
+| `orbit_sim world.launch.py site:=telu_coffee` dan `site:=gedung_P` + satu TIFA `sim:=true` | World dan semua `model://` termuat tanpa error, controller active, scan 10 Hz | PASS (28 Okt 2026). Step fisika 4 ms + lidar sim 360 sampel: RTF 1.0, di `test_room` perintah 0.3 m/s menghasilkan EKF 0.31 m/s |
 | Tes konsistensi limits YAML fleet vs param Nav2 | Sama | NOT RUN |

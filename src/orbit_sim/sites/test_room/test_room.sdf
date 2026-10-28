@@ -4,8 +4,8 @@
      Peta Nav2 yang cocok: maps/test_room.yaml (frame map = frame world). -->
 <sdf version="1.9">
   <world name="test_room">
-    <physics name="1ms" type="ignored">
-      <max_step_size>0.001</max_step_size>
+    <physics name="4ms" type="ignored">
+      <max_step_size>0.004</max_step_size>
       <real_time_factor>1.0</real_time_factor>
     </physics>
 
