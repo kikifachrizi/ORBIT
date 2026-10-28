@@ -1,0 +1,57 @@
+Generated using the built-in image_gen tool. Source: docs/adr/README.md and ADR-001–003. All ADRs Proposed.
+
+Use case: infographic-diagram.
+Create a polished Indonesian engineering team mind map as ONE landscape image, EXACT 16:9 aspect ratio, preferably 3840x2160, high resolution readable presentation. Asset for Project ORBIT team delivery. Crisp modern flat vector-like infographic, white/light background, dark navy headings, teal, blue, orange, purple branch colors, thin curved connectors and tasteful small robot/code/map/package icons. Clear typographic hierarchy, spacious and exceptionally readable, no photorealism. Real radial mind map with central hub and four numbered package branches in quadrants. Top compact band for external components; bottom compact band for shared contracts and assignment. Main topic is responsibility DIVISION BY PACKAGE, NOT assigned people. Do not invent names or owners.
+
+Required exact content, render accurately in Indonesian. Top title:
+"PROJECT ORBIT"
+"Mind Map Pembagian Kerja Engineering"
+Small status badge: "Rancangan ADR-001–003 • Proposed • 21 Oktober 2026"
+Top external dependency band: "Dipakai dari ekosistem: Open-RMF (fleet core) • Nav2 (navigasi) • Gazebo Harmonic (simulasi)"
+Central hub: "ORBIT" / "Integrasi RMF ↔ TIFA / NEVO"
+small central sublabel "Ubuntu 24.04 • ROS 2 Jazzy"
+
+Four branches:
+UPPER LEFT teal branch header "1  orbit_adapter"
+subtitle "Integrasi RMF ↔ robot"
+Three connected subnodes:
+"Core bersama" / "Transform koordinat (NumPy) • health/stale • dedup task • status"
+"Backend nav2" / "TIFA & NEVO • goal, feedback, stop"
+"Backend graph" / "Slotcar • PathRequest / ModeRequest / RobotState"
+Small output tag "Bukti: contract test + simulasi + uji fisik"
+Small subtle note "Robot custom opsional • PLC/line follower pasca-sprint"
+
+UPPER RIGHT blue branch header "2  orbit_sim"
+subtitle "Aset fasilitas logistik fiktif"
+Connected subnodes:
+"Peta & graph" / "Traffic Editor • waypoint • lane • stasiun"
+"Simulasi" / "World Gazebo • model TIFA & NEVO"
+"Peta Nav2" / "Occupancy map • penyelarasan koordinat RMF"
+Small output tag "Bukti: minimal 2 robot + aset dibundel"
+
+LOWER LEFT orange branch header "3  orbit_bringup"
+subtitle "Launch & konfigurasi"
+Connected subnodes:
+"Mode operasi" / "Launch simulasi dan fisik"
+"Konfigurasi fleet" / "Robot • namespace • backend • charger"
+"Parameter robot" / "Footprint • kecepatan • titik referensi"
+Small output tag "Bukti: startup terulang + runbook"
+
+LOWER RIGHT purple branch header "4  orbit"
+subtitle "Metapackage & distribusi"
+Connected subnodes:
+"Dependency" / "Menarik seluruh package ORBIT"
+"Release" / ".deb per package • versi • SHA-256 • CI"
+"Validasi" / "Clean install Ubuntu 24.04 + Jazzy"
+Small output tag "Bukti: install tanpa source / build manual"
+Small note "Metapackage ≠ satu executable"
+
+Bottom two slim bands with adequate readable font:
+"Kontrak bersama: nav graph • identitas & namespace robot • profil fisik • transform koordinat • timeout/health"
+"Pembagian personel: owner + reviewer tiap package BELUM DIISI — tetapkan saat review"
+Footer smaller:
+"Runtime: apt/rosdep • free_fleet hanya referensi/dev • safety existing robot tetap aktif"
+"Dasar: orbit_adr/docs/adr/README.md dan ADR-001, ADR-002, ADR-003"
+
+Constraints: Show Proposed clearly, not approved or completed. No claims tests already passed. No client names, NDA wording, sponsors, made-up logos, fabricated assigned personnel, or extra technical components. Preserve four total packages: orbit_adapter, orbit_sim, orbit_bringup, orbit (metapackage). Do not imply four packages PLUS a fifth metapackage. Avoid tiny dense paragraph text; balanced layout, branches outside central hub, no crossing connectors, no cropped text. All Indonesian copy legible and accurate.
+
