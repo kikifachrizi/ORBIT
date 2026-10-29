@@ -69,13 +69,21 @@ Perbaikan wajib sebelum merge: semua topic relatif (termasuk yang hardcoded di `
 - Urutan nyala memakai `TimerAction`, bukan event handler: aksi dari `RegisterEventHandler` berjalan di luar `PushRosNamespace` sehingga node kehilangan namespace.
 - Terverifikasi di sim: dua TIFA (`tifa1`, `tifa2`) dalam satu world, controller dan Nav2 masing-masing aktif, teleop terisolasi, goal Nav2 keduanya SUCCEEDED.
 
+## Isi awal `orbit_bringup` dan nav graph (branch `feat/orbit_adapter`, 28 Okt 2026)
+
+- Satu pintu masuk `launch/orbit.launch.py site:=<site> mode:=sim|real` (bukan `sim.launch.py` terpisah). RMW: Cyclone DDS dengan `config/cyclonedds.xml` (ADR-005). Mode `real` hanya menyalakan inti RMF dan adapter; robot fisik dinyalakan di komputernya sendiri.
+- `launch/rmf_core.launch.py`: `rmf_traffic_schedule`, `rmf_traffic_blockade`, `building_map_server`, `rmf_task_dispatcher`, dan `rmf_visualization` (`rviz:=false` untuk headless).
+- `config/sites/<site>/site.yaml` berisi daftar fleet (`fleets.<fleet>.config`) dan, untuk sim, robot yang di-spawn (`sim.robots.<nama>`: `bringup`, `x`, `y`, `yaw`). Robot sim dinyalakan bergiliran, dengan jeda `robot_stagger` (default 25 s), supaya Nav2 robot sebelumnya sudah aktif.
+- Data site lain diambil dari `orbit_sim/sites/<site>/` menurut konvensi nama: `<site>.building.yaml`, `nav_graphs/0.yaml`, dan `maps/<site>.yaml` (peta Nav2 robot sim).
+- Nav graph tidak di-commit. `orbit_sim/CMakeLists.txt` men-generate-nya dari `<site>.building.yaml` (`building_map_generator nav`) saat build, jadi graph selalu sesuai file sumbernya. `test_room.building.yaml` memakai `coordinate_system: cartesian_meters` agar frame-nya sama dengan world dan peta Nav2.
+
 ## Verifikasi
 
 | Tes | Expected | Status |
 | --- | --- | --- |
 | `ros2 launch tifa_bringup robot.launch.py namespace:=tifa1 sim:=true` tanpa RMF ter-source | Robot bisa di-teleop dan menerima goal Nav2 | NOT RUN |
 | `rosdep keys --from-paths src/tifa` | Tidak ada key `rmf_*` | NOT RUN |
-| `orbit.launch.py mode:=sim` dengan dua robot | Semua node robot di bawah `/tifa1`, `/nevo1`; adapter menerima status keduanya | NOT RUN |
+| `orbit.launch.py mode:=sim` dengan dua robot | Semua node robot di bawah `/tifa1`, `/nevo1`; adapter menerima status keduanya | PASS untuk dua TIFA (28 Okt 2026, `site:=test_room`, Cyclone DDS): `/tifa1`, `/tifa2` terdaftar dan menjalankan task. NEVO belum ada |
 | `orbit_sim world.launch.py site:=test_room` + 2× `tifa_bringup robot.launch.py sim:=true` (`tifa1`, `tifa2`), `nav:=true` | Dua entity, 2×2 controller active, scan 10 Hz per robot, satu publisher `/clock`, teleop terisolasi, goal Nav2 keduanya SUCCEEDED | PASS (26 Okt 2026). Catatan: satu kali dari tiga run goal `tifa2` ABORTED karena `compute_path_to_pose` timeout saat CPU penuh (load 11) |
 | `orbit_sim world.launch.py site:=telu_coffee` dan `site:=gedung_P` + satu TIFA `sim:=true` | World dan semua `model://` termuat tanpa error, controller active, scan 10 Hz | PASS (28 Okt 2026). Step fisika 4 ms + lidar sim 360 sampel: RTF 1.0, di `test_room` perintah 0.3 m/s menghasilkan EKF 0.31 m/s |
 | Tes konsistensi limits YAML fleet vs param Nav2 | Sama | NOT RUN |

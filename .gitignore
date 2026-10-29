@@ -22,3 +22,5 @@ dist/
 .obsidian/
 /20[0-9][0-9]-*.md
 /reports/
+# Snapshot schedule RMF yang ditulis rmf_traffic_schedule ke direktori kerja
+.rmf_schedule_node.yaml

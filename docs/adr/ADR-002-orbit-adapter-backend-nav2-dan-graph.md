@@ -109,9 +109,20 @@ robots:
 
 Selain YAML, robot baru juga membutuhkan: waypoint charger/parkir di nav graph, profil fisik (footprint, kecepatan), dan untuk `nav2` kalibrasi titik referensi peta. Jenis robot baru yang tidak cocok dengan `nav2` maupun kontrak `graph` memerlukan backend baru.
 
+### Implementasi awal (branch `feat/orbit_adapter`, 28 Okt 2026)
+
+- Scope dipersempit karena jadwal (D7): hanya backend `nav2` dan site `test_room`. Backend `graph`, NEVO, dan PLC ditunda; interface `RobotBackend` sudah disiapkan agar backend baru tidak mengubah core.
+- Struktur: `backends/base.py` (`RobotBackend`: `pose`, `battery_soc`, `navigate`, `stop`, `nav_status`), `backends/nav2.py`, `robot_adapter.py` (callback EasyFullControl ↔ backend), `fleet_adapter.py` (satu proses per fleet), `dispatch_task.py` (kirim task lewat `/task_api_requests`, karena `rmf_demos_tasks` tidak dirilis sebagai dependency ORBIT).
+- Config memakai format `FleetConfiguration.from_config_files` milik RMF. Key ORBIT (`backend`, `namespace`, `map_frame`, `base_frame`, `battery_topic`, `pose_timeout`) ditaruh di `rmf_fleet.robots.<nama>` dan diabaikan parser RMF.
+- **Transformasi koordinat memakai `reference_coordinates` bawaan EasyFullControl**, bukan kode `numpy` sendiri: RMF 2.7 sudah mengubah posisi robot ↔ nav graph dari pasangan titik di config fleet. Tanpa `reference_coordinates`, transformasinya identitas (dipakai `test_room`, karena frame nav graph = frame map Nav2).
+- Backend `nav2`: satu node rclpy per robot di namespace robot. Listener tf di-remap ke `/<ns>/tf`; pose = tf `map → base_link` dan dianggap basi setelah `pose_timeout` (default 2 s). Goal dikirim ke action `navigate_to_pose`.
+- Robot baru didaftarkan ke RMF setelah pose pertama tersedia, yaitu setelah AMCL aktif. Bila pose basi, update ke RMF dihentikan.
+- Bila Nav2 gagal, goal dicoba ulang hingga 3 kali dengan jeda 2 s. Setelah itu perintah diakhiri dan RMF merencanakan ulang dari posisi aktual.
+- Baterai: dari `battery_topic` (`sensor_msgs/BatteryState`) bila diisi; selain itu 100%.
+
 ### Konsekuensi
 
-- Transformasi koordinat RMF ↔ peta robot diimplementasikan dengan `numpy` (bukan `nudged`) agar dependency dapat dipasang dari apt (ADR-003).
+- Transformasi koordinat RMF ↔ peta robot memakai `reference_coordinates` EasyFullControl (lihat implementasi awal), jadi tidak butuh `nudged` maupun kode transformasi sendiri (ADR-003).
 - Untuk robot Nav2 diperlukan dua peta yang disejajarkan: nav graph (traffic editor) untuk RMF, dan occupancy map (`.pgm/.yaml`) untuk Nav2.
 - Safety existing robot tidak dioverride: adapter hanya mengirim tujuan dan perintah stop/pause; pengereman darurat, scanner, dan e-stop tetap di robot/PLC (NFR-03).
 - Health detector menandai robot stale bila `status()` tidak diperbarui melewati batas waktu yang ditetapkan sebelum tes; robot stale tidak menerima task baru (G1-06).
@@ -120,8 +131,8 @@ Selain YAML, robot baru juga membutuhkan: waypoint charger/parkir di nav graph, 
 
 | Tes | Expected | Status |
 | --- | --- | --- |
-| Contract test backend dengan `FakeBackend` (tanpa ROS/Gazebo) | Navigate, stop, timeout, dan stale terdeteksi sesuai kontrak | NOT RUN |
-| Backend `nav2` dengan dua robot Nav2 di Gazebo Harmonic | Task RMF dieksekusi, feedback dan hasil terminal tercatat | NOT RUN |
+| Contract test backend dengan `FakeBackend` (tanpa ROS/Gazebo) | Navigate, stop, timeout, dan stale terdeteksi sesuai kontrak | PASS (28 Okt 2026): `orbit_adapter/test/test_robot_adapter.py`, 5 tes: registrasi setelah pose pertama, navigate sukses, retry lalu menyerah, stop hanya untuk aktivitas yang cocok, pose basi menghentikan update |
+| Backend `nav2` dengan dua robot Nav2 di Gazebo Harmonic | Task RMF dieksekusi, feedback dan hasil terminal tercatat | PASS (28 Okt 2026, `test_room`, Cyclone DDS): `tifa1` patrol north→east dan `tifa2` go_to south bersamaan, RMF menahan robot di titik tunggu untuk menghindari konflik di `center`, keduanya kembali parkir ke charger. Dengan Fast DDS gagal 2/4 run (ADR-005) |
 | Backend `graph` dengan slotcar | Task yang sama dieksekusi tanpa mengubah kode core (bukti NFR-01) | NOT RUN |
 | Fault injection: robot berhenti melapor | Robot ditandai stale, task tidak menggantung tanpa status | NOT RUN |
 | TIFA dan NEVO fisik dengan backend `nav2` | G2-01 s.d. G2-05 per robot | NOT RUN |

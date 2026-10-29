@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Konfigurasi Cyclone DDS untuk ORBIT (ADR-005, Proposed).
+     Pakai di setiap terminal/mesin ORBIT (server FMS dan robot), sebelum menjalankan node:
+       export RMW_IMPLEMENTATION=rmw_cyclonedds_cpp
+       export CYCLONEDDS_URI=file://$(ros2 pkg prefix orbit_bringup)/share/orbit_bringup/config/cyclonedds.xml
+     Default Cyclone hanya menyediakan sedikit participant index per domain; satu site sim
+     (RMF + 2 TIFA) sudah sekitar 50 proses ROS, jadi batasnya dinaikkan. -->
+<CycloneDDS xmlns="https://cdds.io/config">
+  <Domain id="any">
+    <Discovery>
+      <MaxAutoParticipantIndex>200</MaxAutoParticipantIndex>
+    </Discovery>
+  </Domain>
+</CycloneDDS>

@@ -1,0 +1,46 @@
+# Config fleet TIFA untuk site test_room (format EasyFullControl, ADR-004).
+# limits dan footprint harus sama dengan param Nav2 tifa_bringup (DWB_params.yaml):
+#   max_vel_x 0.35, acc_lim_x 0.3, max_vel_theta 0.8, acc_lim_theta 1.0, robot_radius 0.36
+rmf_fleet:
+  name: tifa
+  limits:
+    linear: [0.35, 0.3]     # kecepatan (m/s), percepatan (m/s^2)
+    angular: [0.8, 1.0]     # kecepatan (rad/s), percepatan (rad/s^2)
+  profile:
+    footprint: 0.36         # radius (m)
+    vicinity: 0.6           # radius area yang dihindari robot lain (m)
+  reversible: false         # min_vel_x Nav2 = 0, robot tidak mundur
+  battery_system:           # nilai perkiraan; baterai sim di-dummy 100%
+    voltage: 24.0
+    capacity: 20.0
+    charging_current: 5.0
+  mechanical_system:
+    mass: 30.0
+    moment_of_inertia: 10.0
+    friction_coefficient: 0.22
+  ambient_system:
+    power: 20.0
+  tool_system:
+    power: 0.0
+  recharge_threshold: 0.10
+  recharge_soc: 1.0
+  publish_fleet_state: 10.0
+  robot_state_update_frequency: 2.0
+  account_for_battery_drain: false
+  task_capabilities:
+    loop: true
+    delivery: false
+  finishing_request: park   # selesai task, robot kembali ke charger/parkir
+  responsive_wait: true
+  robots:
+    # Key ORBIT: backend, namespace (lihat orbit_adapter/fleet_adapter.py)
+    tifa1:
+      charger: tifa1_charger
+      backend: nav2
+      namespace: tifa1
+    tifa2:
+      charger: tifa2_charger
+      backend: nav2
+      namespace: tifa2
+
+# Tanpa reference_coordinates: frame nav graph test_room = frame map Nav2 (identitas).

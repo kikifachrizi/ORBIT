@@ -1,0 +1,15 @@
+# Site test_room (ADR-004). Data site (world, peta Nav2, building.yaml, nav graph) diambil
+# dari orbit_sim/sites/test_room/ berdasarkan nama site.
+site: test_room
+
+# Satu orbit_adapter per fleet. Config fleet ada di folder ini.
+fleets:
+  tifa:
+    config: fleet_tifa.yaml
+
+# Hanya mode:=sim. Robot fisik dinyalakan di komputernya sendiri (robot.launch.py).
+# Pose spawn = initial pose AMCL; disamakan dengan waypoint charger di nav graph.
+sim:
+  robots:
+    tifa1: {bringup: tifa_bringup, x: -3.0, y: 1.2, yaw: 0.0}
+    tifa2: {bringup: tifa_bringup, x: -3.0, y: -0.6, yaw: 0.0}
