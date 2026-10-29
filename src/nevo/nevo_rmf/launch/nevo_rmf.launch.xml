@@ -1,0 +1,63 @@
+<?xml version='1.0' ?>
+<!-- RMF core + NEVO fleet adapter.
+     Sim (default): run orbit_nevo_bringup sim_fleet.launch.py in another terminal.
+     Real NEVO:     use_sim_time:=false config_file:=.../fleet_config_real.yaml map_dir:=<folder> ...
+     See the package README. -->
+<launch>
+  <arg name="use_sim_time" default="true" description="false for the real robot (no /clock)"/>
+  <arg name="map_dir" default="$(find-pkg-share nevo_rmf)/maps/house" description="Folder with the building yaml, nav graphs and robot map"/>
+  <arg name="building" default="house" description="building yaml name in map_dir: BUILDING.building.yaml"/>
+  <arg name="nav_graph" default="1" description="graph index in map_dir/nav_graphs (traffic-editor exports one per graph)"/>
+  <arg name="robot_map" default="turtlebot3_save_map" description="the robot's own map yaml name in map_dir (the image the graph was drawn on)"/>
+  <arg name="level" default="L1" description="traffic-editor level name"/>
+  <arg name="building_file" default="$(var map_dir)/$(var building).building.yaml"/>
+  <arg name="nav_graph_file" default="$(var map_dir)/nav_graphs/$(var nav_graph).yaml"/>
+  <arg name="robot_map_yaml" default="$(var map_dir)/$(var robot_map).yaml"/>
+  <arg name="config_file" default="$(find-pkg-share nevo_rmf)/config/fleet_config.yaml"/>
+  <arg name="rmf_core" default="true" description="false = adapter only, when another launch already runs the RMF schedule + dispatcher (e.g. TIFA's)"/>
+  <arg name="server_uri" default="" description="rmf-web api-server, e.g. ws://localhost:8000/_internal"/>
+  <arg name="headless" default="false" description="skip RViz"/>
+  <arg name="lane_following" default="config" description="true = stage 3b (FollowPath + RPP), false = stage 3a (NavigateToPose), config = nevo.lane_following"/>
+
+  <group if="$(var rmf_core)">
+    <!-- Traffic schedule + blockade moderator -->
+    <node pkg="rmf_traffic_ros2" exec="rmf_traffic_schedule" name="rmf_traffic_schedule_primary" output="both">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
+    <node pkg="rmf_traffic_ros2" exec="rmf_traffic_blockade" output="both">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
+
+    <!-- Building map (floor plan + graph for visualization and rmf-web) -->
+    <node pkg="rmf_building_map_tools" exec="building_map_server" args="$(var building_file)">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+    </node>
+
+    <!-- RViz with RMF schedule / nav graph / fleet markers. Delayed: the schedule
+         visualizer gives up after 10 s if rmf_traffic_schedule isn't up yet
+         ("Mirror was not initialized"), and then never draws the planned routes. -->
+    <timer period="10.0">
+      <include file="$(find-pkg-share rmf_visualization)/visualization.launch.xml">
+        <arg name="use_sim_time" value="$(var use_sim_time)"/>
+        <arg name="map_name" value="$(var level)"/>
+        <arg name="viz_config_file" value="$(find-pkg-share nevo_rmf)/config/rmf.rviz"/>
+        <arg name="headless" value="$(var headless)"/>
+      </include>
+    </timer>
+
+    <!-- Task dispatcher (bidding) -->
+    <node pkg="rmf_task_ros2" exec="rmf_task_dispatcher" output="screen">
+      <param name="use_sim_time" value="$(var use_sim_time)"/>
+      <param name="bidding_time_window" value="2.0"/>
+      <param name="use_unique_hex_string_with_task_id" value="true"/>
+      <param name="server_uri" value="$(var server_uri)"/>
+    </node>
+  </group>
+
+  <!-- NEVO fleet adapter (takes sim time from the use_sim_time param) -->
+  <node pkg="nevo_rmf" exec="fleet_adapter" output="both"
+        args="-c $(var config_file) -n $(var nav_graph_file) -m $(var robot_map_yaml) -L $(var lane_following)">
+    <param name="use_sim_time" value="$(var use_sim_time)"/>
+    <param name="server_uri" value="$(var server_uri)"/>
+  </node>
+</launch>

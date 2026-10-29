@@ -1,0 +1,59 @@
+# RMF fleet description for the REAL NEVO (one robot, namespace nevo1).
+# Robot side: nevo_bot launch_robot.launch.py namespace:=nevo1 nav_params:=.../hw_nav_rmf.yaml
+# (branch feat/hw-namespace), which gives /nevo1/navigate_to_pose, /nevo1/follow_path with the
+# LaneFollow controller, and TF on /nevo1/tf.
+rmf_fleet:
+  name: "nevo"
+  limits:
+    linear: [0.25, 0.25]  # velocity, acceleration: the robot's MPPI / velocity_smoother limits
+    angular: [0.5, 0.5]   # (controller_mppi_params.yaml vx_max, ax_max, wz_max, az_max)
+  profile:                # robot modelled as a circle
+    footprint: 0.46       # radius in m: NEVO 0.70 x 0.60 m rectangle -> center-to-corner 0.46
+    vicinity: 0.60        # radius in m, used for conflict checks (>= footprint + margin)
+  reversible: False
+  battery_system:
+    voltage: 24.0
+    capacity: 20.0
+    charging_current: 5.0
+  mechanical_system:
+    mass: 30.0
+    moment_of_inertia: 10.0
+    friction_coefficient: 0.22
+  ambient_system:
+    power: 20.0
+  tool_system:
+    power: 0.0
+  recharge_threshold: 0.10
+  recharge_soc: 1.0
+  publish_fleet_state: 5.0
+  account_for_battery_drain: False   # no battery reading yet (ina226 bridge disabled on the robot)
+  task_capabilities:
+    loop: True
+    delivery: False
+    clean: False
+  finishing_request: "nothing"       # park / charge / nothing
+  robots:
+    nevo1:
+      charger: "nevo1_charger"        # must be a waypoint name in the nav graph (mark it as charger)
+
+# Not read by RMF: settings for this adapter only
+nevo:
+  rmf_map_name: "L1"                  # level name in traffic-editor (must match the building yaml)
+  map_frame: "map"
+  base_frame: "base_link"
+  battery_soc: 1.0                    # fixed until the robot reports its battery
+  update_period: 0.2                  # s, state report to RMF
+  # Each lane is driven with FollowPath + the robot's LaneFollow (RPP) controller from
+  # hw_nav_rmf.yaml. lane_following:=false falls back to NavigateToPose, which runs the
+  # robot's own BT (its recoveries can back up and re-localize without RMF knowing).
+  lane_following: true
+  lane_controller: "LaneFollow"
+  lane_goal_checker: "general_goal_checker"
+  lane_progress_checker: ""           # "" = controller server's only progress checker
+  lane_path_resolution: 0.05          # m between path poses
+  replan_delay: 5.0                   # s to wait after a Nav2 failure before asking RMF to replan
+  robots:
+    nevo1: {namespace: "nevo1"}
+  # The RMF -> robot offset is computed from the robot map yaml (launch arg robot_map):
+  # valid only if the graph was drawn in traffic-editor on that same map image, at the
+  # map's resolution (m/px), without rotating it.

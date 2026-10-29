@@ -1,0 +1,60 @@
+# RMF fleet description for NEVO (sim). Values are sim placeholders; measure the real robot later.
+rmf_fleet:
+  name: "nevo"
+  limits:
+    linear: [0.3, 0.5]    # velocity, acceleration (bid cost and schedule timing)
+    angular: [0.6, 1.5]
+  profile:                # robot modelled as a circle
+    footprint: 0.46       # radius in m: NEVO 0.70 x 0.60 m rectangle -> center-to-corner 0.46
+    vicinity: 0.60        # radius in m, used for conflict checks (>= footprint + margin)
+  reversible: False
+  battery_system:
+    voltage: 24.0
+    capacity: 20.0
+    charging_current: 5.0
+  mechanical_system:
+    mass: 30.0
+    moment_of_inertia: 10.0
+    friction_coefficient: 0.22
+  ambient_system:
+    power: 20.0
+  tool_system:
+    power: 0.0
+  recharge_threshold: 0.10
+  recharge_soc: 1.0
+  publish_fleet_state: 5.0
+  account_for_battery_drain: False   # the sim has no battery model
+  task_capabilities:
+    loop: True
+    delivery: False
+    clean: False
+  finishing_request: "nothing"       # park / charge / nothing
+  robots:                             # names = ROS namespaces from orbit_nevo_bringup
+    nevo1:
+      charger: "nevo1_charger"        # must be a waypoint name in your nav graph
+    nevo2:
+      charger: "nevo2_charger"        # bottom room, px (283.3, 228.9)
+
+# Not read by RMF: settings for this adapter only
+nevo:
+  rmf_map_name: "L1"                  # level name in traffic-editor
+  map_frame: "map"
+  base_frame: "base_link"
+  battery_soc: 1.0                    # fixed in sim
+  update_period: 0.2                  # s, state report to RMF
+  # Stage 3b: drive each lane with FollowPath + RPP instead of a free NavigateToPose
+  # goal (launch arg lane_following:=true|false overrides this).
+  lane_following: true
+  lane_controller: "LaneFollow"       # controller_plugins name in orbit_nevo_bringup nav2_sim.yaml
+  lane_goal_checker: "general_goal_checker"
+  lane_progress_checker: ""           # "" = controller server's only progress checker
+  lane_path_resolution: 0.05          # m between path poses
+  replan_delay: 5.0                   # s to wait after a Nav2 failure before asking RMF to replan
+  # Per robot: ROS namespace from orbit_nevo_bringup. The adapter uses
+  # /<namespace>/navigate_to_pose and reads the pose from /<namespace>/tf.
+  robots:
+    nevo1: {namespace: "nevo1"}
+    nevo2: {namespace: "nevo2"}
+  # The RMF -> robot offset is computed from the robot map yaml passed with -m
+  # (valid only if the traffic-editor drawing scale = map resolution, and all
+  # robots localize on that same map).
