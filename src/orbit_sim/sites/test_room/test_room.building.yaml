@@ -1,0 +1,31 @@
+# Nav graph RMF untuk site test_room (format rmf_traffic_editor, bisa dibuka di traffic-editor).
+# Koordinat cartesian_meters = frame world Gazebo = frame map Nav2 (maps/test_room.yaml),
+# jadi transformasi RMF <-> robot adalah identitas.
+#
+# Ruang 8 x 6 m (x -4..4, y -3..3), kotak b1 di (2, 1.5) dan b2 di (-1.5, -1.8).
+# Waypoint dijaga >= 1 m dari dinding dan kotak (radius TIFA 0.38 m + inflasi Nav2).
+# Nav graph di-generate saat build (CMakeLists.txt) ke share/orbit_sim/sites/test_room/nav_graphs/.
+#
+# Tipe param: 1 string, 2 int, 3 double, 4 bool.
+coordinate_system: cartesian_meters
+name: test_room
+lifts: {}
+levels:
+  L1:
+    elevation: 0
+    vertices:
+      - [-3.0, 1.2, 0, tifa1_charger, {is_charger: [4, true], is_parking_spot: [4, true], is_holding_point: [4, true]}]
+      - [-3.0, -0.6, 0, tifa2_charger, {is_charger: [4, true], is_parking_spot: [4, true], is_holding_point: [4, true]}]
+      - [-2.0, 0.3, 0, west]
+      - [0.0, 0.3, 0, center]
+      - [0.3, 1.9, 0, north]
+      - [2.8, -0.2, 0, east]
+      - [1.0, -1.9, 0, south]
+    lanes:
+      - [0, 2, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [1, 2, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [2, 3, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [3, 4, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [3, 5, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [3, 6, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
+      - [5, 6, {bidirectional: [4, true], graph_idx: [2, 0], orientation: [1, ""], speed_limit: [3, 0]}]
