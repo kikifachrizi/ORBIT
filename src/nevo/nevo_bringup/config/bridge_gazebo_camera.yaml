@@ -1,0 +1,19 @@
+# Sim depth camera (robot.launch.py sim:=true camera:=true). The point cloud is published as
+# <ns>/points, the topic the real Kinect pipeline (kinect_ros2 + depth_image_proc) uses.
+- ros_topic_name: "camera/depth/image_raw"
+  gz_topic_name: "camera/depth/image_raw"
+  ros_type_name: "sensor_msgs/msg/Image"
+  gz_type_name: "gz.msgs.Image"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "camera/depth/camera_info"
+  gz_topic_name: "camera/depth/camera_info"
+  ros_type_name: "sensor_msgs/msg/CameraInfo"
+  gz_type_name: "gz.msgs.CameraInfo"
+  direction: GZ_TO_ROS
+
+- ros_topic_name: "points"
+  gz_topic_name: "camera/depth/image_raw/points"
+  ros_type_name: "sensor_msgs/msg/PointCloud2"
+  gz_type_name: "gz.msgs.PointCloudPacked"
+  direction: GZ_TO_ROS

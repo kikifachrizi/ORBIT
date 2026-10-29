@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>nevo_bringup</name>
+  <version>0.1.0</version>
+  <description>NEVO robot definition for ORBIT: URDF, ros2_control (real and Gazebo), sensors, cmd_vel chain, EKF and Nav2. Does not depend on RMF (ADR-004).</description>
+  <maintainer email="delphiarya@gmail.com">Arya Delphi</maintainer>
+  <license>Apache-2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <!-- C++ node: safety_fail_node -->
+  <depend>rclcpp</depend>
+  <depend>geometry_msgs</depend>
+
+  <!-- Runtime: nodes started by nevo_bringup launch files -->
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>python3-yaml</exec_depend>
+  <exec_depend>xacro</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>diff_drive_controller</exec_depend>
+  <exec_depend>joint_state_broadcaster</exec_depend>
+  <exec_depend>twist_mux</exec_depend>
+  <exec_depend>laser_filters</exec_depend>
+  <exec_depend>robot_localization</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>navigation2</exec_depend>
+  <exec_depend>nav2_common</exec_depend>
+  <exec_depend>nav2_regulated_pure_pursuit_controller</exec_depend>
+  <exec_depend>spatio_temporal_voxel_layer</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
+  <exec_depend>python3-serial</exec_depend>         <!-- imu_publisher.py -->
+  <exec_depend>nevo_diffdrive_arduino</exec_depend>  <!-- vendored in src/nevo -->
+  <exec_depend>kinect_ros2</exec_depend>             <!-- vendored in src/nevo -->
+  <exec_depend>rf2o_laser_odometry</exec_depend>     <!-- vendored in src/tifa, shared -->
+  <exec_depend>rplidar_ros</exec_depend>             <!-- vendored in src/tifa, shared (ADR-004) -->
+
+  <!-- Simulation (robot.launch.py sim:=true) -->
+  <exec_depend>ros_gz_sim</exec_depend>
+  <exec_depend>ros_gz_bridge</exec_depend>
+  <exec_depend>gz_ros2_control</exec_depend>
+  <exec_depend>teleop_twist_keyboard</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+    <!-- Gazebo finds the package://nevo_bringup/... meshes through ros_gz_sim -->
+    <gazebo_ros gazebo_model_path="${prefix}/.."/>
+  </export>
+</package>

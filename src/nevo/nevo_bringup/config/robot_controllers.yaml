@@ -1,0 +1,52 @@
+# Real NEVO (ros2_control_node + nevo_diffdrive_arduino). Sim: robot_controllers_sim.yaml.
+# /**/ keys: also read when the node runs in a robot namespace (/nevo1/controller_manager).
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 20
+    use_sim_time: false
+
+    diff_cont:
+      type: diff_drive_controller/DiffDriveController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+/**/diff_cont:
+  ros__parameters:
+    publish_rate: 20.0
+    base_frame_id: base_link
+
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    # Calibrated on the real robot (NEVO repo, 2026-10-14/19): spin test vs lidar ICP for the
+    # radius/separation ratio, then 4 straight legs (tape + ICP) scaled both by 1.0389.
+    # The URDF keeps the measured geometry (0.425 / 0.0635); sim uses that.
+    wheel_separation: 0.401
+    wheel_radius: 0.0660
+
+    enable_odom_tf: false    # odom -> base_link comes from the EKF
+    odom_frame_id: odom
+    # Jazzy prefixes odom/base_link with the node namespace by default (nevo1/odom), which
+    # does not exist in the TF tree. Frames stay plain; robots are separated by /<ns>/tf.
+    tf_frame_prefix_enable: false
+
+    # Default 10 = 0.5 s rolling mean on the twist -> ~225 ms lag (the EKF fuses only twist).
+    velocity_rolling_window_size: 2
+
+    twist_covariance_diagonal: [0.001, 0.001, 1e6, 1e6, 1e6, 0.001]
+    pose_covariance_diagonal: [0.001, 0.001, 1e6, 1e6, 1e6, 0.01]
+
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.max_velocity: 0.5
+    linear.x.min_velocity: -0.5
+    linear.x.max_acceleration: 0.6      # backstop above Nav2's limits
+    linear.x.min_acceleration: -0.6
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.max_velocity: 1.0
+    angular.z.min_velocity: -1.0
+    angular.z.max_acceleration: 1.2
+    angular.z.min_acceleration: -1.2

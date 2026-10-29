@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="nevo">
+
+    <!-- sim_mode = true  -> Gazebo hardware (gz_ros2_control)
+         sim_mode = false -> real hardware (nevo_diffdrive_arduino). Default = real robot. -->
+    <xacro:arg name="sim_mode" default="false"/>
+
+    <!-- Robot namespace (e.g. nevo1). Only used in sim: gz sensor topic prefix and the
+         namespace of the controller_manager inside Gazebo. Empty = no namespace. -->
+    <xacro:arg name="namespace" default=""/>
+
+    <!-- Sim depth camera (Kinect) on/off -->
+    <xacro:arg name="camera" default="false"/>
+
+    <xacro:include filename="robot_core.xacro"/>
+
+    <!-- Hardware: one ros2_control block, plugin chosen by sim_mode -->
+    <xacro:include filename="ros2_control.xacro"/>
+
+    <!-- Sensors (<gazebo> tags are only read by Gazebo) -->
+    <xacro:include filename="lidar.xacro"/>
+    <xacro:include filename="depth_camera.xacro"/>
+    <xacro:include filename="imu.xacro"/>
+
+</robot>

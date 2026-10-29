@@ -1,0 +1,227 @@
+import os
+
+from ament_index_python.packages import get_package_share_directory
+
+from launch import LaunchDescription
+from launch.actions import (
+    DeclareLaunchArgument, GroupAction, SetEnvironmentVariable,
+    ExecuteProcess,
+)
+from launch.conditions import IfCondition
+from launch.substitutions import LaunchConfiguration, PythonExpression
+from launch_ros.actions import LoadComposableNodes
+from launch_ros.actions import Node
+from launch_ros.descriptions import ComposableNode, ParameterFile
+from nav2_common.launch import RewrittenYaml
+
+
+def generate_launch_description():
+    bringup_dir = get_package_share_directory('nevo_bringup')
+
+    namespace = LaunchConfiguration('namespace')
+    map_yaml_file = LaunchConfiguration('map')
+    use_sim_time = LaunchConfiguration('use_sim_time')
+    params_file = LaunchConfiguration('params_file')
+    use_composition = LaunchConfiguration('use_composition')
+    container_name = LaunchConfiguration('container_name')
+    container_name_full = (namespace, '/', container_name)
+    use_respawn = LaunchConfiguration('use_respawn')
+    log_level = LaunchConfiguration('log_level')
+
+    remappings = [('/tf', 'tf'), ('/tf_static', 'tf_static')]
+
+    param_substitutions = {
+        'use_sim_time': use_sim_time,
+        'yaml_filename': map_yaml_file}
+
+    configured_params = ParameterFile(
+        RewrittenYaml(
+            source_file=params_file,
+            root_key=namespace,
+            param_rewrites=param_substitutions,
+            convert_types=True),
+        allow_substs=True)
+
+    stdout_linebuf_envvar = SetEnvironmentVariable(
+        'RCUTILS_LOGGING_BUFFERED_STREAM', '1')
+
+    declare_namespace_cmd = DeclareLaunchArgument(
+        'namespace', default_value='')
+    declare_map_yaml_cmd = DeclareLaunchArgument(
+        'map', description='Full path to map yaml file')
+    declare_use_sim_time_cmd = DeclareLaunchArgument(
+        'use_sim_time', default_value='false')
+    declare_params_file_cmd = DeclareLaunchArgument(
+        'params_file',
+        default_value=os.path.join(bringup_dir, 'config', 'nav2_real.yaml'))
+    declare_use_composition_cmd = DeclareLaunchArgument(
+        'use_composition', default_value='False')
+    declare_container_name_cmd = DeclareLaunchArgument(
+        'container_name', default_value='nav2_container')
+    declare_use_respawn_cmd = DeclareLaunchArgument(
+        'use_respawn', default_value='False')
+    declare_log_level_cmd = DeclareLaunchArgument(
+        'log_level', default_value='info')
+    # Initial pose the lifecycle activator sends once AMCL is active (map frame).
+    # Defaults (0, 0, 0) keep the real-robot behaviour; sim_nav passes its own.
+    declare_initial_pose_cmds = [
+        DeclareLaunchArgument(f'initial_pose_{k}', default_value='0.0',
+                              description=f'AMCL initial pose {k} in map frame'
+                                          + (' (rad)' if k == 'yaw' else ' (m)'))
+        for k in ('x', 'y', 'yaw')
+    ]
+
+    load_nodes = GroupAction(
+        condition=IfCondition(PythonExpression(['not ', use_composition])),
+        actions=[
+            Node(
+                package='nav2_map_server',
+                executable='map_server',
+                name='map_server',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings),
+            Node(
+                package='nav2_amcl',
+                executable='amcl',
+                name='amcl',
+                output='screen',
+                respawn=use_respawn,
+                respawn_delay=2.0,
+                parameters=[configured_params],
+                arguments=['--ros-args', '--log-level', log_level],
+                remappings=remappings),
+        ]
+    )
+
+    load_composable_nodes = LoadComposableNodes(
+        condition=IfCondition(use_composition),
+        target_container=container_name_full,
+        composable_node_descriptions=[
+            ComposableNode(
+                package='nav2_map_server',
+                plugin='nav2_map_server::MapServer',
+                name='map_server',
+                parameters=[configured_params],
+                remappings=remappings),
+            ComposableNode(
+                package='nav2_amcl',
+                plugin='nav2_amcl::AmclNode',
+                name='amcl',
+                parameters=[configured_params],
+                remappings=remappings),
+        ],
+    )
+
+    lifecycle_script = ExecuteProcess(
+        cmd=['bash', '-c', '''
+            # RMW_IMPLEMENTATION / ROS_DOMAIN_ID are inherited from the launch env.
+            # --no-daemon everywhere: a ros2 daemon left over from another RMW (or an
+            # rmw_zenoh daemon) answers with an empty graph -> "Node not found".
+
+            # N = "/<namespace>" or "" (robot stack namespaced by launch_robot namespace:=)
+            N="${NS:+/$NS}"
+
+            # Wait for nodes to appear on the ROS graph
+            echo "=== lifecycle_activator: waiting for map_server node ==="
+            for i in $(seq 1 30); do
+                if ros2 node list --no-daemon 2>/dev/null | grep -qx "$N/map_server"; then
+                    echo "=== lifecycle_activator: map_server found after ${i}s ==="
+                    break
+                fi
+                sleep 1
+            done
+            sleep 3
+
+            # Retry helper: try a lifecycle command up to N times
+            lifecycle_set() {
+                local node="$1" transition="$2" label="$3"
+                for attempt in 1 2 3 4 5 6 7 8; do
+                    echo "=== lifecycle_activator: $label (attempt $attempt) ==="
+                    OUTPUT=$(ros2 lifecycle set --no-daemon "$node" "$transition" 2>&1)
+                    echo "$OUTPUT"
+                    if echo "$OUTPUT" | grep -q "Transitioning successful"; then
+                        echo "=== lifecycle_activator: $label OK ==="
+                        return 0
+                    fi
+                    # The reply can be lost or report failure although the node did
+                    # transition (seen with rmw_zenoh under load): trust the node state.
+                    STATE=$(ros2 lifecycle get --no-daemon "$node" 2>/dev/null)
+                    if { [ "$transition" = configure ] && echo "$STATE" | grep -q "^inactive"; } ||
+                       { [ "$transition" = activate ] && echo "$STATE" | grep -q "^active"; }; then
+                        echo "=== lifecycle_activator: $label OK (state: $STATE) ==="
+                        return 0
+                    fi
+                    echo "=== lifecycle_activator: $label failed, retrying in 5s ==="
+                    sleep 5
+                done
+                echo "=== lifecycle_activator: $label FAILED after 8 attempts ==="
+                return 1
+            }
+
+            # Configure and activate map_server
+            lifecycle_set $N/map_server configure "configuring map_server"
+            sleep 3
+            lifecycle_set $N/map_server activate "activating map_server"
+            sleep 3
+
+            # Configure and activate AMCL
+            lifecycle_set $N/amcl configure "configuring amcl"
+            sleep 3
+            lifecycle_set $N/amcl activate "activating amcl"
+            sleep 3
+
+            # Publish the initial pose until AMCL broadcasts map->odom, then STOP.
+            # (An endless re-publish loop would snap AMCL back to this pose every
+            # few seconds for the whole run.) Pose comes from INIT_X/Y/YAW.
+            QZ=$(python3 -c "import math; print(math.sin(float('$INIT_YAW') / 2))")
+            QW=$(python3 -c "import math; print(math.cos(float('$INIT_YAW') / 2))")
+            echo "=== lifecycle_activator: initial pose x=$INIT_X y=$INIT_Y yaw=$INIT_YAW ==="
+            for i in $(seq 1 24); do
+                ros2 topic pub --once $N/initialpose geometry_msgs/PoseWithCovarianceStamped "{
+                  header: {frame_id: 'map'},
+                  pose: {
+                    pose: {position: {x: $INIT_X, y: $INIT_Y, z: 0.0}, orientation: {x: 0.0, y: 0.0, z: $QZ, w: $QW}},
+                    covariance: [0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.25, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0625]
+                  }
+                }" >/dev/null 2>&1
+                if timeout 5 ros2 run tf2_ros tf2_echo map odom --ros-args -r /tf:=$N/tf -r /tf_static:=$N/tf_static 2>/dev/null | grep -q "Translation"; then
+                    echo "=== lifecycle_activator: map->odom TF confirmed after publish #${i} ==="
+                    break
+                fi
+                if [ "$i" -eq 24 ]; then
+                    echo "=== lifecycle_activator: WARNING map->odom TF not confirmed after 24 publishes ==="
+                fi
+            done
+
+            echo "=== lifecycle_activator: done ==="
+        '''],
+        additional_env={
+            'INIT_X': LaunchConfiguration('initial_pose_x'),
+            'INIT_Y': LaunchConfiguration('initial_pose_y'),
+            'INIT_YAW': LaunchConfiguration('initial_pose_yaw'),
+            'NS': namespace,
+        },
+        output='screen'
+    )
+
+    ld = LaunchDescription()
+    ld.add_action(stdout_linebuf_envvar)
+    ld.add_action(declare_namespace_cmd)
+    ld.add_action(declare_map_yaml_cmd)
+    ld.add_action(declare_use_sim_time_cmd)
+    ld.add_action(declare_params_file_cmd)
+    ld.add_action(declare_use_composition_cmd)
+    ld.add_action(declare_container_name_cmd)
+    ld.add_action(declare_use_respawn_cmd)
+    ld.add_action(declare_log_level_cmd)
+    for cmd in declare_initial_pose_cmds:
+        ld.add_action(cmd)
+    ld.add_action(load_nodes)
+    ld.add_action(load_composable_nodes)
+    ld.add_action(lifecycle_script)
+
+    return ld
