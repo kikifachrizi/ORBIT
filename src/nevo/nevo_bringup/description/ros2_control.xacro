@@ -1,0 +1,57 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- Sim and real use the SAME joints, interfaces and controllers; only the hardware
+         plugin differs. -->
+    <ros2_control name="NevoSystem" type="system">
+      <hardware>
+        <xacro:if value="$(arg sim_mode)">
+          <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+        </xacro:if>
+        <xacro:unless value="$(arg sim_mode)">
+          <plugin>nevo_diffdrive_arduino/DiffDriveArduino</plugin>
+          <param name="left_wheel_name">left_wheel_joint</param>
+          <param name="right_wheel_name">right_wheel_joint</param>
+          <param name="loop_rate">30</param>
+          <param name="device">/dev/ttyMOTOR</param>
+          <param name="baud_rate">57600</param>
+          <param name="timeout">30</param>
+          <param name="enc_counts_per_rev">2000</param>
+          <!-- Motor deadband compensation (2026-10-27): wheels do not turn below
+               ~3.5-4 counts/frame, so non-zero targets below 4 are raised to 4 (0 = off). -->
+          <param name="min_counts_per_frame">4.0</param>
+          <param name="zero_counts_per_frame">0.5</param>
+        </xacro:unless>
+      </hardware>
+
+      <joint name="left_wheel_joint">
+        <command_interface name="velocity">
+          <param name="min">-10</param>
+          <param name="max">10</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+      <joint name="right_wheel_joint">
+        <command_interface name="velocity">
+          <param name="min">-10</param>
+          <param name="max">10</param>
+        </command_interface>
+        <state_interface name="position"/>
+        <state_interface name="velocity"/>
+      </joint>
+    </ros2_control>
+
+    <!-- Sim: controller_manager runs inside Gazebo, in the robot namespace -->
+    <xacro:if value="$(arg sim_mode)">
+      <gazebo>
+        <plugin filename="gz_ros2_control-system" name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+          <parameters>$(find nevo_bringup)/config/robot_controllers_sim.yaml</parameters>
+          <ros>
+            <namespace>$(arg namespace)</namespace>
+            <remapping>/tf:=tf</remapping>
+          </ros>
+        </plugin>
+      </gazebo>
+    </xacro:if>
+</robot>

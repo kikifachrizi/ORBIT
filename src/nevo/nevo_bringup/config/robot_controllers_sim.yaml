@@ -1,0 +1,44 @@
+# Sim NEVO (controller_manager inside Gazebo, gz_ros2_control). Same chain as the real robot;
+# wheel geometry = the URDF (real calibration is in robot_controllers.yaml).
+/**/controller_manager:
+  ros__parameters:
+    update_rate: 100
+    use_sim_time: true
+
+    diff_cont:
+      type: diff_drive_controller/DiffDriveController
+
+    joint_state_broadcaster:
+      type: joint_state_broadcaster/JointStateBroadcaster
+
+/**/diff_cont:
+  ros__parameters:
+    publish_rate: 50.0
+    base_frame_id: base_link
+
+    left_wheel_names: ["left_wheel_joint"]
+    right_wheel_names: ["right_wheel_joint"]
+
+    wheel_separation: 0.425   # URDF wheel joints at y = +-0.2125
+    wheel_radius: 0.0635
+
+    enable_odom_tf: false     # odom -> base_link comes from the EKF (as on the real robot)
+    odom_frame_id: odom
+    tf_frame_prefix_enable: false   # see robot_controllers.yaml
+
+    twist_covariance_diagonal: [0.001, 0.001, 1e6, 1e6, 1e6, 0.001]
+    pose_covariance_diagonal: [0.001, 0.001, 1e6, 1e6, 1e6, 0.01]
+
+    linear.x.has_velocity_limits: true
+    linear.x.has_acceleration_limits: true
+    linear.x.max_velocity: 0.5
+    linear.x.min_velocity: -0.5
+    linear.x.max_acceleration: 0.8
+    linear.x.min_acceleration: -0.8
+
+    angular.z.has_velocity_limits: true
+    angular.z.has_acceleration_limits: true
+    angular.z.max_velocity: 1.5
+    angular.z.min_velocity: -1.5
+    angular.z.max_acceleration: 1.5
+    angular.z.min_acceleration: -1.5

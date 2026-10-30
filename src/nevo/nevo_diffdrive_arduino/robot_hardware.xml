@@ -1,0 +1,9 @@
+<library path="nevo_diffdrive_arduino">
+  <class name="nevo_diffdrive_arduino/DiffDriveArduino"
+         type="DiffDriveArduino"
+         base_class_type="hardware_interface::SystemInterface">
+    <description>
+      Hardware Interface for NEVO's differential drive Arduino board.
+    </description>
+  </class>
+</library>
